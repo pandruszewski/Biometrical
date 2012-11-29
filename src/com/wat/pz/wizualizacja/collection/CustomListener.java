@@ -21,12 +21,13 @@ public class CustomListener implements ActionListener   {
 		
 		if("add".equals(e.getActionCommand())){
 		
-		System.out.println("dodano");	
+		//System.out.println("dodano");
+		
 		jcomp.repaint();
 		}
 		else if("remove".equals(e.getActionCommand())){
 		
-		System.out.println("usunieto");	
+		//System.out.println("usunieto");	
 		jcomp.repaint();
 		}
 		

@@ -1,22 +1,22 @@
 package com.wat.pz.wizualizacja.collection;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
-public class CustomCollection<E> extends LinkedList<E> {
+public class CustomCollection extends LinkedList<Double> {
 
-	E min;
-	E max;
+	private Double min = 0.0;
+	private Double max = 0.0;
 	CustomListener customListener;
 
-	public E getMax() {
+	public Double getMax() {
 		return max;
 	}
 
-	public E getMin() {
+	public Double getMin() {
 		return min;
 	}
 
@@ -26,7 +26,7 @@ public class CustomCollection<E> extends LinkedList<E> {
 
 	}
 
-	public void setMin(E e) {
+	public void setMin(Double e) {
 		this.min = e;
 	}
 
@@ -36,69 +36,87 @@ public class CustomCollection<E> extends LinkedList<E> {
 		customListener = cL;
 	}
 
-	public CustomCollection(Collection<? extends E> c, CustomListener cL) {
+	public CustomCollection(Collection<? extends Double> c, CustomListener cL) {
 		super(c);
 		customListener = cL;
 	}
 
 	public CustomCollection(int numElements, CustomListener cL) {
-		//super(numElements);
+		// super(numElements);
 		customListener = cL;
 	}
 
 	@Override
-	public boolean add(E e) {
+	public boolean add(Double e) {
 
 		boolean bol = super.add(e);
+	
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 
 		return bol;
 	}
 
+	public double getScaleNumber(int rozmiar) {
+		double a = 0.0;
+
+		if (rozmiar > 0 && rozmiar < super.size()) {
+			List<Double> lista = super.subList(rozmiar-1, super.size() - 1);
+			max = Collections.max(lista);
+			min = Collections.min(lista);
+			//System.out.println("max= " + max + " min = " + min);
+		}
+		return a;
+	}
+
 	@Override
-	public void addFirst(E e) {
+	public void addFirst(Double e) {
 
 		super.addFirst(e);
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 	}
 
 	@Override
-	public void addLast(E e) {
+	public void addLast(Double e) {
 
 		super.addLast(e);
+		if (e > max) {
+			max = e;
+		} else if (e < min) {
+			min = e;
+		}
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 	}
 
 	@Override
-	public E getFirst() {
-		E ret = super.getFirst();
-		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
-		return ret;
-	}
-
-	@Override
-	public E getLast() {
-		E ret = super.getLast();
+	public Double getFirst() {
+		Double ret = super.getFirst();
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 		return ret;
 	}
 
 	@Override
-	public E pop() {
-		E ret = super.pop();
+	public Double getLast() {
+		Double ret = super.getLast();
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 		return ret;
 	}
 
 	@Override
-	public void push(E e) {
+	public Double pop() {
+		Double ret = super.pop();
+		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
+		return ret;
+	}
+
+	@Override
+	public void push(Double e) {
 		super.push(e);
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 	}
 
 	@Override
-	public E remove() {
-		E ret = super.remove();
+	public Double remove() {
+		Double ret = super.remove();
 		customListener.actionPerformed(new ActionEvent(this, 1, "remove"));
 		return ret;
 	}
@@ -112,9 +130,9 @@ public class CustomCollection<E> extends LinkedList<E> {
 	}
 
 	@Override
-	public E removeFirst() {
+	public Double removeFirst() {
 
-		E ret = super.removeFirst();
+		Double ret = super.removeFirst();
 		customListener.actionPerformed(new ActionEvent(this, 1, "remove"));
 		return ret;
 
@@ -128,8 +146,8 @@ public class CustomCollection<E> extends LinkedList<E> {
 	}
 
 	@Override
-	public E removeLast() {
-		E ret = super.removeLast();
+	public Double removeLast() {
+		Double ret = super.removeLast();
 		customListener.actionPerformed(new ActionEvent(this, 1, "remove"));
 		return ret;
 	}

@@ -12,6 +12,7 @@ public class Graph extends JPanel {
 	private int wysokosc;
 	private int odstep = 20;
 	private int dlugoscY = 0;
+	private double skala = 1.0;
 
 	public Graph(JPanel panel) {
 		this.panel = panel;
@@ -26,6 +27,7 @@ public class Graph extends JPanel {
 		wysokosc = this.getSize().height - 20;
 
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
+		//System.out.println(dlugoscY);
 		g.setColor(Color.gray);
 		g.drawLine(40, 10, 40, wysokosc);
 		g.drawString(String.valueOf(valueOnLeft), 0, dlugoscY + 10
