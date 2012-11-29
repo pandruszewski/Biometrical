@@ -55,10 +55,11 @@ public class Plot extends JPanel {
 		while (i > 45) {
 
 			if (dlugosc > 1) {
+				
 				Window.customCollection.getScaleNumber(p.getSize().width
 						/ odstep);
-				v = obliczPunkt(Window.customCollection.get(dlugosc - 1)
-						.intValue());
+				v = obliczPunkt((Window.customCollection.get(dlugosc - 1)
+						.intValue()));
 				g.setColor(Color.yellow);
 				g.drawLine(i - odstep, v, i, j);
 				dlugosc -= 1;
@@ -80,5 +81,7 @@ public class Plot extends JPanel {
 
 		return (dlugoscY + punkt + 10);
 	}
+
+
 
 }

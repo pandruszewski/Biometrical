@@ -5,33 +5,31 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComponent;
 
-public class CustomListener implements ActionListener   {
+public class CustomListener implements ActionListener {
 
-	
 	JComponent jcomp;
+
 	public CustomListener(JComponent tmpJcomp) {
-		
-		super();		
-		this.jcomp=tmpJcomp;
-		
+
+		super();
+		this.jcomp = tmpJcomp;
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if("add".equals(e.getActionCommand())){
-		
-		//System.out.println("dodano");
-		
-		jcomp.repaint();
+
+		if ("add".equals(e.getActionCommand())) {
+
+			// System.out.println("dodano");
+
+			jcomp.repaint();
+		} else if ("remove".equals(e.getActionCommand())) {
+
+			//cSystem.out.println("usunieto");
+			jcomp.repaint();
 		}
-		else if("remove".equals(e.getActionCommand())){
-		
-		//System.out.println("usunieto");	
-		jcomp.repaint();
-		}
-		
-		
+
 	}
 
 }
