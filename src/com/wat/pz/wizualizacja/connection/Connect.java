@@ -88,14 +88,28 @@ public class Connect extends Thread {
 		}
 	}
 
-	public void run() {
+	public synchronized void run() {
+		long a, b;
 		if (in != null) {
 			while (in.hasNext()) {
+
 				String content = in.nextLine();
 				// System.out.println(content);
 				// kolejka.add(content);
 
 				Window.customCollection.addLast(Double.parseDouble(content));
+				//plot.repaint();
+
+				/*plot.updateUI();
+				plot.pai*/
+				/*try {
+					System.out.println("stopuje watek");
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				
 				// Main.database.addData(content);
 				//System.out.println("zaraz wchodze do repainta");
 				 //plot.repaint();

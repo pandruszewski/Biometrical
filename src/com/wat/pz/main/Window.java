@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,7 +12,6 @@ import javax.swing.JPanel;
 
 import com.wat.pz.plot.Graph;
 import com.wat.pz.plot.Plot;
-import com.wat.pz.plot.Watek;
 import com.wat.pz.wizualizacja.collection.CustomCollection;
 import com.wat.pz.wizualizacja.collection.CustomListener;
 import com.wat.pz.wizualizacja.connection.Connect;
@@ -30,7 +27,6 @@ public class Window extends JFrame {
 	private Graph graph = new Graph(p);
 	public static Plot plot;
 	private JLayeredPane layer = this.getLayeredPane();
-	private Watek watek;
 	private JPanel panelDolny = new JPanel();
 	private JButton openProperties = new JButton("Wlasciwosci");
 	private JButton startRead = new JButton("Zacznij Odczyt");
@@ -83,6 +79,7 @@ public class Window extends JFrame {
 				} else
 					connect = null;
 				System.gc();
+
 				plot = new Plot(p, graph);
 				customCollection = new CustomCollection(
 						new CustomListener(plot));
@@ -96,6 +93,8 @@ public class Window extends JFrame {
 				layer.add(plot, new Integer(1));
 				connect = new Connect(plot);
 				connect.start();
+			
+				
 			}
 
 		});

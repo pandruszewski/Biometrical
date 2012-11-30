@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.wat.pz.plot.Plot;
+import com.wat.pz.wizualizacja.connection.Connect;
+
 public class CustomCollection extends LinkedList<Double> {
 
 	private Double min = 0.0;
@@ -50,22 +53,31 @@ public class CustomCollection extends LinkedList<Double> {
 	public boolean add(Double e) {
 
 		boolean bol = super.add(e);
-	
+
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 
 		return bol;
 	}
 
-	public double getScaleNumber(int rozmiar) {
-		double a = 0.0;
+	public synchronized double getScaleNumber(int rozmiar) {
 
-		if (rozmiar > 0 && rozmiar < super.size()) {
-			List<Double> lista = super.subList(rozmiar-1, super.size() - 1);
+		/* if (rozmiar > 0 && rozmiar < super.size()) { */
+		if (rozmiar > 0 && super.size() > 0) {
+			List<Double> lista;
+			if (rozmiar >= super.size())
+				lista = super.subList(0, super.size() - 1);
+			else
+				lista = super.subList((super.size() - 1 - rozmiar),
+						super.size() - 1);
 			max = Collections.max(lista);
 			min = Collections.min(lista);
-			//System.out.println("max= " + max + " min = " + min);
+			// System.out.println("max= " + max + " min = " + min + " size = " +
+			// super.size());
 		}
-		return a;
+		if ((-min) > max) {
+			return (-min);
+		}
+		return max;
 	}
 
 	@Override
@@ -75,15 +87,10 @@ public class CustomCollection extends LinkedList<Double> {
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 	}
 
-	@Override
-	public void addLast(Double e) {
+	public synchronized void addLast(Double e) {
 
 		super.addLast(e);
-		if (e > max) {
-			max = e;
-		} else if (e < min) {
-			min = e;
-		}
+
 		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
 	}
 
