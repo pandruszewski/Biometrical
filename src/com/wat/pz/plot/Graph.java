@@ -59,10 +59,15 @@ public class Graph extends JPanel {
 		
 		
 		
-		g.drawLine(40, odstepGora, 40, odstepDol);
-		
-		
-		//valueOnLeft = 0;
+	/*	g2.drawLine(40, odstepGora, 40, odstepDol);
+		int j  = this.getSize().width;;
+		while(j>45){
+		g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_ROUND));
+		g2.setColor(Color.gray);
+		 g2.drawLine(j, getOdstepGora(), j, getOdstepDol());
+		 j -= 10;
+		}*/
 		
 	}
 	

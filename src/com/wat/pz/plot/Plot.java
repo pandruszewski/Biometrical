@@ -9,10 +9,12 @@ import java.util.Random;
 import javax.swing.JPanel;
 
 import com.wat.pz.main.Window;
+import com.wat.pz.wizualizacja.collection.CustomCollection;
 import com.wat.pz.wizualizacja.connection.Connect;
 
 public class Plot extends JPanel {
-
+	private Color kolor;
+	private Connect connect;
 	private int wysokosc = 0;
 	private JPanel p;
 	private int dlugoscY;
@@ -20,7 +22,9 @@ public class Plot extends JPanel {
 	private double skala = 1.0;
 	private int odstep = 10;
 
-	public Plot(JPanel p, Graph graph) {
+	// private CustomCollection customCollection;
+	public Plot(JPanel p, Graph graph, Color color) {
+		this.kolor = color;
 		this.p = p;
 		this.setSize(p.getSize());
 		this.graph = graph;
@@ -36,7 +40,7 @@ public class Plot extends JPanel {
 		Graphics2D g = (Graphics2D) gg;
 		/* dlugoscY = (int) Math.ceil((wysokosc - 10) / 2); */
 		/* System.out.println(dlugoscY); */
-		int dlugosc = Window.customCollection.size() - 1;
+		int dlugosc = connect.getCustomCollection().size() - 1;
 		int j = 0;
 		int v = 0;
 		this.setSize(p.getSize());
@@ -44,33 +48,33 @@ public class Plot extends JPanel {
 		// int odstep = 20;
 		wysokosc = this.getSize().height - odstep;
 
-		g.setColor(Color.yellow);
+		g.setColor(kolor);
 		int i = 45;
 		i = this.getSize().width;
 
 		if (dlugosc > 1) {
-			j = obliczPunkt(Window.customCollection.get(dlugosc).intValue());
+			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
+					.intValue());
 		}
 
 		while (i > 45) {
 			g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
 					BasicStroke.JOIN_ROUND));
 			g.setColor(Color.gray);
-			g.drawLine(i, graph.getOdstepGora(), i, graph.getOdstepDol());
 			g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 					BasicStroke.JOIN_ROUND));
 			if (dlugosc > 1) {
 
-				skala = Window.customCollection
-						.getScaleNumber((p.getSize().width - 40) / odstep);
+				skala = connect.getCustomCollection().getScaleNumber(
+						(p.getSize().width - 40) / odstep);
 				dlugoscY = graph.getScaleHeight();
 				// System.out.println(dlugoscY);
 
 				graph.scaleGraph(skala / dlugoscY);
 				skala = (double) dlugoscY / skala;
-				v = obliczPunkt((Window.customCollection.get(dlugosc - 1)
+				v = obliczPunkt((connect.getCustomCollection().get(dlugosc - 1)
 						.intValue()));
-				g.setColor(Color.yellow);
+				g.setColor(kolor);
 				g.drawLine(i - odstep, v, i, j);
 				dlugosc -= 1;
 				j = v;
@@ -92,6 +96,22 @@ public class Plot extends JPanel {
 		}
 
 		return (int) (dlugoscY - (skala * punkt) + graph.getOdstepGora());
+	}
+
+	public Connect getConnect() {
+		return connect;
+	}
+
+	public void setConnect(Connect connect) {
+		this.connect = connect;
+	}
+
+	public Color getKolor() {
+		return kolor;
+	}
+
+	public void setKolor(Color kolor) {
+		this.kolor = kolor;
 	}
 
 }

@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 
 import com.wat.pz.main.Window;
 import com.wat.pz.plot.Plot;
+import com.wat.pz.wizualizacja.collection.CustomCollection;
 
 public class Connect extends Thread {
 
@@ -26,9 +27,10 @@ public class Connect extends Thread {
 	private Scanner in;
 	public Queue<String> kolejka;
 	private Plot plot;
-
-	public Connect(Plot p) {
-
+	private CustomCollection customCollection;
+private int indexPlot ;
+	public Connect(Plot p, int indexPlot) {
+		this.indexPlot=indexPlot;
 		Properties prop = new Properties();
 		InputStream in;
 		try {
@@ -42,9 +44,9 @@ public class Connect extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		addressIP = prop.get("IP").toString();
-		port = Integer.parseInt(prop.get("PORT").toString());
-		this.plot = p;
+		addressIP = prop.get("IP_"+indexPlot).toString();
+		port = Integer.parseInt(prop.get("PORT_"+indexPlot).toString());
+		this.setPlot(p);
 		kolejka = new PriorityQueue<String>();
 		connectDevice();
 
@@ -52,19 +54,19 @@ public class Connect extends Thread {
 
 	private void connectDevice() {
 		if (socket == null) {
-			String portNumber = "8180";
+			//String portNumber = "8180";
 			/*
 			 * addressIP = JOptionPane.showInputDialog(null,
 			 * "Podaj adres ip urzadzenia w celu polaczenia"); portNumber =
 			 * JOptionPane.showInputDialog("Podaj numer portu");
 			 */
 
-			if (portNumber.matches("[1-9][0-9]+")) {
-				port = Integer.parseInt(portNumber);
-				portNumber = null;
+//			if (portNumber.matches("[1-9][0-9]+")) { //FIXME FAIL? warunek zawsze spe³niony
+//				port = Integer.parseInt(portNumber);
+//				portNumber = null;
 				System.gc();
 
-			}
+			//}
 			if (addressIP.matches("[1-9][0-9]*[.][0-9]*[.][0-9]*[.][0-9]*")
 					&& port > 0 && port < 65536) {
 				try {
@@ -97,7 +99,7 @@ public class Connect extends Thread {
 				// System.out.println(content);
 				// kolejka.add(content);
 
-				Window.customCollection.addLast(Double.parseDouble(content));
+				this.customCollection.addLast(Double.parseDouble(content));
 				//plot.repaint();
 
 				/*plot.updateUI();
@@ -163,6 +165,30 @@ public class Connect extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public Plot getPlot() {
+		return plot;
+	}
+
+	public void setPlot(Plot plot) {
+		this.plot = plot;
+	}
+
+	public CustomCollection getCustomCollection() {
+		return customCollection;
+	}
+
+	public void setCustomCollection(CustomCollection customCollection) {
+		this.customCollection = customCollection;
+	}
+
+	public int getIndexPlot() {
+		return indexPlot;
+	}
+
+	public void setIndexPlot(int indexPlot) {
+		this.indexPlot = indexPlot;
 	}
 
 }
