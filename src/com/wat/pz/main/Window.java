@@ -28,7 +28,6 @@ public class Window extends JFrame {
 
 	public static JPanel p = new JPanel();
 
-	public static CustomCollection customCollection;
 	private PropertiesWindow prop = new PropertiesWindow();
 	public static ConnectToDB database;
 	private Graph graph = new Graph(p);
@@ -37,8 +36,7 @@ public class Window extends JFrame {
 	private JPanel panelDolny = new JPanel();
 	private JButton openProperties = new JButton("Wlasciwosci");
 	private JButton startRead = new JButton("Zacznij Odczyt");
-	private Connect connect;
-	private ArrayList<Plot> plotList;
+	private ArrayList<Plot> plotList = new ArrayList<Plot>();
 
 	public Window() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,49 +75,51 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				plot = null;
-				if (plotList == null) {
-					plotList = new ArrayList<Plot>();
+				for (Plot pl : plotList) {
+					layer.remove(pl);
 
-					for (PropertiesWidget pw : prop.getOknaUstawien()) {
-						Random rand = new Random();
-						float r = rand.nextFloat();
-						float g = rand.nextFloat();
-						float b = rand.nextFloat();
-						if (r < 0.5)
-							r = (float) (r + 0.5);
-						if (g < 0.5)
-							r = (float) (g + 0.5);
-						if (b < 0.5)
-							r = (float) (b + 0.5);
+				}
+				plotList.clear();
 
-						Color randomColor = new Color(r, g, b);
-						plot = new Plot(p, graph, randomColor);
-						plotList.add(plot);
+				for (PropertiesWidget pw : prop.getOknaUstawien()) {
+					Random rand = new Random();
+					float r = rand.nextFloat();
+					float g = rand.nextFloat();
+					float b = rand.nextFloat();
+					if (r < 0.5)
+						r = (float) (r + 0.5);
+					if (g < 0.5)
+						r = (float) (g + 0.5);
+					if (b < 0.5)
+						r = (float) (b + 0.5);
 
-						if (plot.getConnect() != null) {
-							plot.getConnect().interrupt();
-							plot.setConnect(null);
-						} else
-							plot.setConnect(null);
-						System.gc();
+					Color randomColor = new Color(r, g, b);
+					plot = new Plot(p, graph, randomColor);
+					plotList.add(plot);
 
-						plot.setSize(p.getSize().width, 300);
-						plot.setOpaque(false);
+					if (plot.getConnect() != null) {
+						plot.getConnect().interrupt();
+						plot.setConnect(null);
+					} else
+						plot.setConnect(null);
+					System.gc();
 
-						plot.setConnect(new Connect(plot, (prop
-								.getOknaUstawien().indexOf(pw) + 1)));
+					plot.setSize(p.getSize().width, 300);
+					plot.setOpaque(false);
 
-						layer.add(plot, new Integer((prop.getOknaUstawien()
-								.indexOf(pw) + 1))/* new Integer (1) */);
-						plot.getConnect().start();
-						System.out
-								.println((prop.getOknaUstawien().indexOf(pw) + 1)
-										+ "");
+					plot.setConnect(new Connect(plot, (prop.getOknaUstawien()
+							.indexOf(pw) + 1)));
+					// plot.getConnect().setCustomCollection(
+					// new CustomCollection(new CustomListener(plot)));
+					layer.add(plot, new Integer((prop.getOknaUstawien()
+							.indexOf(pw) + 1))/* new Integer (1) */);
+					plot.getConnect().start();
+					System.out.println((prop.getOknaUstawien().indexOf(pw) + 1)
+							+ "");
 
-					}
 				}
 			}
+
 		});
 	}
 

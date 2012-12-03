@@ -16,6 +16,7 @@ public class PropertiesWidget extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField ip = new JTextField(15);
 	private JTextField port = new JTextField(15);
+	private int index;
 
 	public PropertiesWidget(int index, int width, int height) {
 		init(index, width, height);
@@ -35,6 +36,7 @@ public class PropertiesWidget extends JPanel {
 	}
 
 	private void init(int index,int width, int height) {
+		this.setIndex(index);
 		this.setLayout(new BorderLayout());
 		JPanel p = new JPanel();
 		p.setLayout(new BorderLayout());
@@ -48,7 +50,7 @@ public class PropertiesWidget extends JPanel {
 		p.add(new JLabel("Port: "),BorderLayout.WEST);
 		p.add(port,BorderLayout.EAST);
 		this.add(p,BorderLayout.SOUTH);
-		Toolkit.setComponentAllSizes(this, width-40, 50);
+		Toolkit.setComponentAllSizes(this, width, 50);
 	
 	}
 
@@ -66,6 +68,14 @@ public class PropertiesWidget extends JPanel {
 
 	public void setPort(JTextField port) {
 		this.port = port;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 }
