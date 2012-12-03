@@ -106,11 +106,10 @@ public class Window extends JFrame {
 
 						plot.setSize(p.getSize().width, 300);
 						plot.setOpaque(false);
-						
+
 						plot.setConnect(new Connect(plot, (prop
 								.getOknaUstawien().indexOf(pw) + 1)));
-//						plot.getConnect().setCustomCollection(
-//								new CustomCollection(new CustomListener(plot)));
+
 						layer.add(plot, new Integer((prop.getOknaUstawien()
 								.indexOf(pw) + 1))/* new Integer (1) */);
 						plot.getConnect().start();
