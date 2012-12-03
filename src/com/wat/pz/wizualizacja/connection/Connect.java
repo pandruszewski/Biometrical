@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import com.wat.pz.main.Window;
 import com.wat.pz.plot.Plot;
 import com.wat.pz.wizualizacja.collection.CustomCollection;
+import com.wat.pz.wizualizacja.collection.CustomListener;
 
 public class Connect extends Thread {
 
@@ -28,9 +29,11 @@ public class Connect extends Thread {
 	public Queue<String> kolejka;
 	private Plot plot;
 	private CustomCollection customCollection;
-private int indexPlot ;
+	private int indexPlot;
+
 	public Connect(Plot p, int indexPlot) {
-		this.indexPlot=indexPlot;
+		customCollection=new CustomCollection(new CustomListener(p));
+		this.indexPlot = indexPlot;
 		Properties prop = new Properties();
 		InputStream in;
 		try {
@@ -44,8 +47,8 @@ private int indexPlot ;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		addressIP = prop.get("IP_"+indexPlot).toString();
-		port = Integer.parseInt(prop.get("PORT_"+indexPlot).toString());
+		addressIP = prop.get("IP_" + indexPlot).toString();
+		port = Integer.parseInt(prop.get("PORT_" + indexPlot).toString());
 		this.setPlot(p);
 		kolejka = new PriorityQueue<String>();
 		connectDevice();
@@ -54,19 +57,7 @@ private int indexPlot ;
 
 	private void connectDevice() {
 		if (socket == null) {
-			//String portNumber = "8180";
-			/*
-			 * addressIP = JOptionPane.showInputDialog(null,
-			 * "Podaj adres ip urzadzenia w celu polaczenia"); portNumber =
-			 * JOptionPane.showInputDialog("Podaj numer portu");
-			 */
 
-//			if (portNumber.matches("[1-9][0-9]+")) { //FIXME FAIL? warunek zawsze spe³niony
-//				port = Integer.parseInt(portNumber);
-//				portNumber = null;
-				System.gc();
-
-			//}
 			if (addressIP.matches("[1-9][0-9]*[.][0-9]*[.][0-9]*[.][0-9]*")
 					&& port > 0 && port < 65536) {
 				try {
@@ -74,19 +65,19 @@ private int indexPlot ;
 					in = new Scanner(socket.getInputStream());
 				} catch (IOException e) {
 
-					JOptionPane.showMessageDialog(null,
+					
+					  JOptionPane.showMessageDialog(null,
+					  "Host o tym adresie IP nie zostal odnaleziony", "Blad",
+					  JOptionPane.ERROR_MESSAGE);
+					 
+					/*JOptionPane.showMessageDialog(null,
 							"Host o tym adresie IP nie zostal odnaleziony",
-							"Blad", JOptionPane.ERROR_MESSAGE);
+							"Blad", JOptionPane.ERROR_MESSAGE);*/
 
 				}
 
 			}
 
-			// startReceive();
-			/*
-			 * try { socket.close(); } catch (IOException e) { // TODO
-			 * Auto-generated catch block e.printStackTrace(); }
-			 */
 		}
 	}
 
@@ -96,34 +87,8 @@ private int indexPlot ;
 			while (in.hasNext()) {
 
 				String content = in.nextLine();
-				// System.out.println(content);
-				// kolejka.add(content);
 
 				this.customCollection.addLast(Double.parseDouble(content));
-				//plot.repaint();
-
-				/*plot.updateUI();
-				plot.pai*/
-				/*try {
-					System.out.println("stopuje watek");
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-				
-				// Main.database.addData(content);
-				//System.out.println("zaraz wchodze do repainta");
-				 //plot.repaint();
-				
-				
-				/*try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-				 
 
 			}
 			try {

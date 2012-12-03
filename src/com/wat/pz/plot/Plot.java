@@ -8,8 +8,6 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import com.wat.pz.main.Window;
-import com.wat.pz.wizualizacja.collection.CustomCollection;
 import com.wat.pz.wizualizacja.connection.Connect;
 
 public class Plot extends JPanel {
@@ -28,7 +26,6 @@ public class Plot extends JPanel {
 		this.p = p;
 		this.setSize(p.getSize());
 		this.graph = graph;
-
 	}
 
 	Random r = new Random();
@@ -38,14 +35,12 @@ public class Plot extends JPanel {
 
 		super.paintComponent(gg);
 		Graphics2D g = (Graphics2D) gg;
-		/* dlugoscY = (int) Math.ceil((wysokosc - 10) / 2); */
-		/* System.out.println(dlugoscY); */
+
 		int dlugosc = connect.getCustomCollection().size() - 1;
 		int j = 0;
 		int v = 0;
 		this.setSize(p.getSize());
 
-		// int odstep = 20;
 		wysokosc = this.getSize().height - odstep;
 
 		g.setColor(kolor);
@@ -63,16 +58,15 @@ public class Plot extends JPanel {
 			g.setColor(Color.gray);
 			g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 					BasicStroke.JOIN_ROUND));
-			if (dlugosc > 1) {
+			if (dlugosc > 1 && connect.getCustomCollection() != null) {
 
 				skala = connect.getCustomCollection().getScaleNumber(
 						(p.getSize().width - 40) / odstep);
 				dlugoscY = graph.getScaleHeight();
-				// System.out.println(dlugoscY);
 
 				graph.scaleGraph(skala / dlugoscY);
 				skala = (double) dlugoscY / skala;
-				v = obliczPunkt((connect.getCustomCollection().get(dlugosc - 1)
+				v = obliczPunkt((connect.getCustomCollection().get(dlugosc)
 						.intValue()));
 				g.setColor(kolor);
 				g.drawLine(i - odstep, v, i, j);
@@ -85,13 +79,10 @@ public class Plot extends JPanel {
 
 		}
 
-		/* notifyAll(); */
-		/* System.out.print("puszczam watek"); */
 	}
 
 	public int obliczPunkt(int punkt) {
 		if (punkt > 0) {
-			/* System.out.println(punkt); */
 			return (int) (dlugoscY - (skala * punkt) + graph.getOdstepGora());
 		}
 
