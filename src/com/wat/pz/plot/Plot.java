@@ -20,6 +20,11 @@ public class Plot extends JPanel {
 	private double skala = 1.0;
 	private int odstep = 10;
 
+	public int getOdstep() {
+		return odstep;
+	}
+
+
 	// private CustomCollection customCollection;
 	public Plot(JPanel p, Graph graph, Color color) {
 		this.kolor = color;

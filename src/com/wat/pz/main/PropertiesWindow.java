@@ -89,6 +89,7 @@ public class PropertiesWindow extends JFrame {
 		scroll = new JScrollPane(panel);
 		this.add(scroll, BorderLayout.WEST);
 
+
 		ustawZrodla.addActionListener(new ActionListener() {
 
 			@Override

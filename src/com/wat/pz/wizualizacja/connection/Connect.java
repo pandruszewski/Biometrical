@@ -30,8 +30,13 @@ public class Connect extends Thread {
 	private Plot plot;
 	private CustomCollection customCollection;
 	private int indexPlot;
+	private int odstepPunktow = 0;
+	private long wspolrzednaX = 0;
+	private ConnectToDB database;
 
-	public Connect(Plot p, int indexPlot) {
+	public Connect(Plot p, int indexPlot, ConnectToDB database) {
+		odstepPunktow = p.getOdstep();
+		this.database = database;
 		customCollection=new CustomCollection(new CustomListener(p));
 		this.indexPlot = indexPlot;
 		Properties prop = new Properties();
@@ -89,10 +94,12 @@ public class Connect extends Thread {
 				String content = in.nextLine();
 
 				this.customCollection.addLast(Double.parseDouble(content));
-
+				wspolrzednaX = wspolrzednaX + odstepPunktow;
+				database.addData(String.valueOf(wspolrzednaX), content, String.valueOf(indexPlot));
 			}
 			try {
 				socket.close();
+				System.out.println(this.isAlive());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -156,4 +163,12 @@ public class Connect extends Thread {
 		this.indexPlot = indexPlot;
 	}
 
+	public void closeSocket(){
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
