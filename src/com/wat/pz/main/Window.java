@@ -47,27 +47,32 @@ public class Window extends JFrame {
 	private JButton saveResult = new JButton("Zapisz wyniki");
 	private JButton stopMeasure = new JButton("Zatrzymaj pomiar");
 	private JButton resultWindow = new JButton("Show Result Window");
+	private JButton exitButton = new JButton("Wyjdz");
 	private ProgressMonitor progressMonitor;
 	private ArrayList<Plot> plotList = new ArrayList<Plot>();
 
 	public Window() {
+		//this.setUndecorated(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getLayeredPane().setSize(this.getSize().height,
 				this.getSize().width);
 
 		this.getContentPane().setLayout(new GridLayout(2, 1));
-
+		
+		
 		this.getContentPane().add(p);
 		panelDolny.add(openProperties);
 		panelDolny.add(startRead);
 		panelDolny.add(stopMeasure);
 		panelDolny.add(saveResult);
 		panelDolny.add(resultWindow);
+		panelDolny.add(exitButton);
 		this.getContentPane().add(panelDolny);
 
 		this.pack();
 		this.setSize(500, 500);
-
+		//this.setLocationRelativeTo(null);
+		
 		this.setVisible(true);
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
@@ -248,6 +253,15 @@ public class Window extends JFrame {
 				}
 			}
 
+		});
+		
+		exitButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+				
+			}
 		});
 	}
 

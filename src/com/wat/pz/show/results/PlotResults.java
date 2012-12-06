@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -27,12 +26,14 @@ public class PlotResults extends JPanel {
 	private int odstepPunkt = 0;
 	private Graphics graphic = null;
 	private PlotResults plot = null;
+	private double przeskalujWykresX = 1.0;
+	private double przeskalujWykresY = 1.0;
 
-	public PlotResults(final Data data, JPanel panel) {
-		this.data = data;
+	public PlotResults(Data dataObject, JPanel panel) {
+		this.data = dataObject;
 		this.panel = panel;
 		plot = this;
-		ToolTipManager.sharedInstance().setInitialDelay(100);
+		ToolTipManager.sharedInstance().setInitialDelay(0);
 
 		// ToolTipManager.sharedInstance().setDismissDelay(500);
 		// this.setToolTipText("lalalal");
@@ -48,14 +49,16 @@ public class PlotResults extends JPanel {
 			@Override
 			public void mouseMoved(MouseEvent o) {
 				// System.out.println(o.getX() + "  " + o.getY());
-				int wspX = (o.getX() - odstepOdPoczatkuWykresu) / odstepPunkt;
+				int wspX = (int) (((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
 				// System.out.println(wspX);
 				if (wspX >= 0 && wspX < data.points.size()) {
 					Point p = data.points.get(wspX);
 					// System.out.println("x= " + p.getX() + " y= " + p.getY());
 					// paintInfoDialog(graphic);
-					if (o.getY() + 3 >= plot.obliczPunkt(p.getY())
-							&& o.getY() - 3 <= plot.obliczPunkt(p.getY())) {
+					if ((o.getY() / przeskalujWykresY) + 3 >= plot
+							.obliczPunkt(p.getY())
+							&& (o.getY() / przeskalujWykresY) - 3 <= plot
+									.obliczPunkt(p.getY())) {
 						// plot.setToolTipText("punkt");
 
 						System.out.println("kursor" + o.getY() + "\nznalezione"
@@ -63,11 +66,14 @@ public class PlotResults extends JPanel {
 
 						plot.setToolTipText("<html>Wspolrzedna X: " + p.getX()
 								+ "<br>Wspolrzedna Y: " + p.getY()
-								+ "<br>Pomiar urzadzenie nr: " + p.getIndeks()+"</html>");
+								+ "<br>Pomiar urzadzenie nr: " + p.getIndeks()
+								+ "</html>");
 
 					} else {
 						plot.setToolTipText(null);
 					}
+					p = null;
+					System.gc();
 				}
 
 			}
@@ -82,11 +88,16 @@ public class PlotResults extends JPanel {
 		if (graphic == null)
 			graphic = gg;
 		Graphics2D g = (Graphics2D) gg;
-//		g.scale(2.0, 2.0);
+		g.scale(przeskalujWykresX, przeskalujWykresY);
 		double pomoc = 0;
 		skala = data.getMaxY();
+		int wysokoscOkna = panel.getSize().height - 50;
+		setPreferredSize(new Dimension(
+				(int) (przeskalujWykresY * (data.getMaxX() + 30)),
+				(int) (przeskalujWykresY * (panel.getSize().height - 50))));
 
-		wysokosc = this.getSize().height - 20;
+		// g.scale(2.0, 2.0);
+		wysokosc = wysokoscOkna - 20;
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
 		int mojOdstepDol = (wysokosc - (dlugoscY + 10)) / odstep;
 		odstepDol = ((mojOdstepDol * odstep) + dlugoscY + 10);
@@ -94,8 +105,7 @@ public class PlotResults extends JPanel {
 		odstepGora = ((dlugoscY + 10) - (mojOdstepGora * odstep));
 		pomoc = skala;
 		skala = skala / ((dlugoscY + 10) - odstepGora);
-		setPreferredSize(new Dimension(data.getMaxX() + 30,
-				panel.getSize().height - 30));
+
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
@@ -149,5 +159,15 @@ public class PlotResults extends JPanel {
 	public void paintInfoDialog(Graphics g) {
 		g.setColor(Color.blue);
 		g.fillRect(30, 30, 30, 30);
+	}
+
+	public void setPrzeskalujWykresX(int x) {
+		przeskalujWykresX = (double)x / 10.0;
+		repaint();
+	}
+
+	public void setPrzeskalujWykresy(int y) {
+		przeskalujWykresY = (double)y / 10.0;
+		repaint();
 	}
 }

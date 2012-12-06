@@ -161,9 +161,9 @@ public class PropertiesWindow extends JFrame {
 		OutputStream os;
 		try {
 			os = new FileOutputStream(f);
-			properties.setProperty("IP", ip.getText());
-			properties.setProperty("PORT", port.getText());
-			
+			//properties.setProperty("IP", ip.getText());
+			//properties.setProperty("PORT", port.getText());
+			properties.setProperty("HOSTS", zrodla.getText());
 			for (PropertiesWidget pw : oknaUstawien) {
 				
 				properties.setProperty("IP_"+(pw.getIndex()+1), pw.getIp().getText());

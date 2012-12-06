@@ -37,7 +37,7 @@ public class Connect extends Thread {
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
 		odstepPunktow = p.getOdstep();
 		this.database = database;
-		customCollection=new CustomCollection(new CustomListener(p));
+		customCollection = new CustomCollection(new CustomListener(p));
 		this.indexPlot = indexPlot;
 		Properties prop = new Properties();
 		InputStream in;
@@ -70,14 +70,15 @@ public class Connect extends Thread {
 					in = new Scanner(socket.getInputStream());
 				} catch (IOException e) {
 
-					
-					  JOptionPane.showMessageDialog(null,
-					  "Host o tym adresie IP nie zostal odnaleziony", "Blad",
-					  JOptionPane.ERROR_MESSAGE);
-					 
-					/*JOptionPane.showMessageDialog(null,
+					JOptionPane.showMessageDialog(null,
 							"Host o tym adresie IP nie zostal odnaleziony",
-							"Blad", JOptionPane.ERROR_MESSAGE);*/
+							"Blad", JOptionPane.ERROR_MESSAGE);
+
+					/*
+					 * JOptionPane.showMessageDialog(null,
+					 * "Host o tym adresie IP nie zostal odnaleziony", "Blad",
+					 * JOptionPane.ERROR_MESSAGE);
+					 */
 
 				}
 
@@ -95,7 +96,8 @@ public class Connect extends Thread {
 
 				this.customCollection.addLast(Double.parseDouble(content));
 				wspolrzednaX = wspolrzednaX + odstepPunktow;
-				database.addData(String.valueOf(wspolrzednaX), content, String.valueOf(indexPlot));
+				database.addData(String.valueOf(wspolrzednaX), content,
+						String.valueOf(indexPlot));
 			}
 			try {
 				socket.close();
@@ -163,7 +165,7 @@ public class Connect extends Thread {
 		this.indexPlot = indexPlot;
 	}
 
-	public void closeSocket(){
+	public void closeSocket() {
 		try {
 			socket.close();
 		} catch (IOException e) {

@@ -15,8 +15,7 @@ public class Main {
 				}
 			}
 		} catch (Exception ee) {
-			// If Nimbus is not available, you can set the GUI to another look
-			// and feel.
+			
 		}
 		Window window = new Window();
 
