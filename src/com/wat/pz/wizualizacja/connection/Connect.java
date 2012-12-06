@@ -59,6 +59,8 @@ public class Connect extends Thread {
 		connectDevice();
 
 	}
+	
+	
 
 	private void connectDevice() {
 		if (socket == null) {
@@ -96,8 +98,8 @@ public class Connect extends Thread {
 
 				this.customCollection.addLast(Double.parseDouble(content));
 				wspolrzednaX = wspolrzednaX + odstepPunktow;
-				database.addData(String.valueOf(wspolrzednaX), content,
-						String.valueOf(indexPlot));
+				//database.addData(String.valueOf(wspolrzednaX), content,
+					//	String.valueOf(indexPlot));
 			}
 			try {
 				socket.close();

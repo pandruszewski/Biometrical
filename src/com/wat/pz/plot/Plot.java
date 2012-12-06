@@ -8,10 +8,11 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+import com.wat.pz.main.PropertiesWidget;
+import com.wat.pz.utils.ColorSwatch;
 import com.wat.pz.wizualizacja.connection.Connect;
 
 public class Plot extends JPanel {
-	private Color kolor;
 	private Connect connect;
 	private int wysokosc = 0;
 	private JPanel p;
@@ -19,6 +20,7 @@ public class Plot extends JPanel {
 	private Graph graph;
 	private double skala = 1.0;
 	private int odstep = 10;
+	private PropertiesWidget propertiesWidget;
 
 	public int getOdstep() {
 		return odstep;
@@ -26,21 +28,20 @@ public class Plot extends JPanel {
 
 
 	// private CustomCollection customCollection;
-	public Plot(JPanel p, Graph graph, Color color) {
-		this.kolor = color;
+	public Plot(JPanel p, Graph graph) {
 		this.p = p;
 		this.setSize(p.getSize());
 		this.graph = graph;
 	}
 
-	Random r = new Random();
 
 	@Override
 	protected synchronized void paintComponent(Graphics gg) {
 
 		super.paintComponent(gg);
+	
 		Graphics2D g = (Graphics2D) gg;
-
+		 Color kolor = ((ColorSwatch)propertiesWidget.getColorButton().getIcon()).getColor();
 		int dlugosc = connect.getCustomCollection().size() - 1;
 		int j = 0;
 		int v = 0;
@@ -102,12 +103,15 @@ public class Plot extends JPanel {
 		this.connect = connect;
 	}
 
-	public Color getKolor() {
-		return kolor;
+
+
+	public PropertiesWidget getPropertiesWidget() {
+		return propertiesWidget;
 	}
 
-	public void setKolor(Color kolor) {
-		this.kolor = kolor;
+
+	public void setPropertiesWidget(PropertiesWidget propertiesWidget) {
+		this.propertiesWidget = propertiesWidget;
 	}
 
 }

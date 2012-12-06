@@ -91,8 +91,8 @@ public class Window extends JFrame {
 
 		});
 		if (database == null) {
-			database = new ConnectToDB();
-			database.removeAllRows();
+			//database = new ConnectToDB();
+			//database.removeAllRows();
 		}
 		startRead.addActionListener(new ActionListener() {
 
@@ -106,19 +106,9 @@ public class Window extends JFrame {
 				plotList.clear();
 
 				for (PropertiesWidget pw : prop.getOknaUstawien()) {
-					Random rand = new Random();
-					float r = rand.nextFloat();
-					float g = rand.nextFloat();
-					float b = rand.nextFloat();
-					if (r < 0.5)
-						r = (float) (r + 0.5);
-					if (g < 0.5)
-						r = (float) (g + 0.5);
-					if (b < 0.5)
-						r = (float) (b + 0.5);
-
-					Color randomColor = new Color(r, g, b);
-					plot = new Plot(p, graph, randomColor);
+					
+					plot = new Plot(p, graph);
+					plot.setPropertiesWidget(pw);
 					plotList.add(plot);
 
 					if (plot.getConnect() != null) {
