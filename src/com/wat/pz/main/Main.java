@@ -18,7 +18,7 @@ public class Main {
 			
 		}
 		Window window = new Window();
-
+		
 		window.setSize(500, 500);
 		
 	}

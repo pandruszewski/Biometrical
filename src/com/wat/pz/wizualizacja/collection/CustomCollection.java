@@ -91,7 +91,7 @@ public class CustomCollection extends LinkedList<Double> {
 
 		super.addLast(e);
 
-		customListener.actionPerformed(new ActionEvent(this, 1, "add"));
+		customListener.refresh();//       actionPerformed(new ActionEvent(this, 1, "add"));
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class Window extends JFrame {
 	public static ConnectToDB database;
 	private Graph graph = new Graph(p);
 	private static Plot plot;
-	private JLayeredPane layer = this.getLayeredPane();
+	public volatile static JLayeredPane layer;     // Przemek zjebales... layeredpanel nie mo¿e byc na wszytskim! trzeba zrobic po srodku go! 
 	private JPanel panelDolny = new JPanel();
 	private JButton openProperties = new JButton("Wlasciwosci");
 	private JButton startRead = new JButton("Zacznij Odczyt");
@@ -56,7 +56,7 @@ public class Window extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getLayeredPane().setSize(this.getSize().height,
 				this.getSize().width);
-
+layer = this.getLayeredPane();
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 		
 		
@@ -76,10 +76,11 @@ public class Window extends JFrame {
 		this.setVisible(true);
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
+		
 
 		database = null;
 		layer.add(graph, new Integer(0));
-
+layer.setDoubleBuffered(true);
 		openProperties.addActionListener(new ActionListener() {
 
 			@Override
@@ -123,14 +124,9 @@ public class Window extends JFrame {
 
 					plot.setConnect(new Connect(plot, (prop.getOknaUstawien()
 							.indexOf(pw) + 1), database));
-					// plot.getConnect().setCustomCollection(
-					// new CustomCollection(new CustomListener(plot)));
 					layer.add(plot, new Integer((prop.getOknaUstawien()
 							.indexOf(pw) + 1))/* new Integer (1) */);
 					plot.getConnect().start();
-					// System.out.println((prop.getOknaUstawien().indexOf(pw) +
-					// 1)
-					// + "");
 
 				}
 			}

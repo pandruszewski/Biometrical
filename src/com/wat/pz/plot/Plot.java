@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Line2D;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -26,22 +28,23 @@ public class Plot extends JPanel {
 		return odstep;
 	}
 
-
 	// private CustomCollection customCollection;
 	public Plot(JPanel p, Graph graph) {
 		this.p = p;
 		this.setSize(p.getSize());
 		this.graph = graph;
+		System.out.println(this.isDoubleBuffered());
 	}
 
-
 	@Override
-	protected synchronized void paintComponent(Graphics gg) {
-
+	public synchronized void paintComponent(Graphics gg) {
+this.setDoubleBuffered(false);
 		super.paintComponent(gg);
-	
+
 		Graphics2D g = (Graphics2D) gg;
-		 Color kolor = ((ColorSwatch)propertiesWidget.getColorButton().getIcon()).getColor();
+		
+		Color kolor = ((ColorSwatch) propertiesWidget.getColorButton()
+				.getIcon()).getColor();
 		int dlugosc = connect.getCustomCollection().size() - 1;
 		int j = 0;
 		int v = 0;
@@ -52,18 +55,23 @@ public class Plot extends JPanel {
 		g.setColor(kolor);
 		int i = 45;
 		i = this.getSize().width;
-
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+		g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 		if (dlugosc > 1) {
 			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
 					.intValue());
 		}
-
+		g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_ROUND));
+		g.setColor(kolor);
+		 synchronized (this) {
 		while (i > 45) {
-			g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
-					BasicStroke.JOIN_ROUND));
-			g.setColor(Color.gray);
-			g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
-					BasicStroke.JOIN_ROUND));
+
 			if (dlugosc > 1 && connect.getCustomCollection() != null) {
 
 				skala = connect.getCustomCollection().getScaleNumber(
@@ -74,18 +82,27 @@ public class Plot extends JPanel {
 				skala = (double) dlugoscY / skala;
 				v = obliczPunkt((connect.getCustomCollection().get(dlugosc)
 						.intValue()));
-				g.setColor(kolor);
-				g.drawLine(i - odstep, v, i, j);
+				//g.drawLine        (i - odstep, v, i, j);
+				g.draw(new Line2D.Double(i - odstep, v, i, j));
 				dlugosc -= 1;
 				j = v;
+				
 
 			}
 
 			i -= odstep;
 
 		}
+		 }
 
 	}
+	
+
+
+	@Override
+	public void update(Graphics g) {
+		super.update(g);
+	};
 
 	public int obliczPunkt(int punkt) {
 		if (punkt > 0) {
@@ -103,12 +120,9 @@ public class Plot extends JPanel {
 		this.connect = connect;
 	}
 
-
-
 	public PropertiesWidget getPropertiesWidget() {
 		return propertiesWidget;
 	}
-
 
 	public void setPropertiesWidget(PropertiesWidget propertiesWidget) {
 		this.propertiesWidget = propertiesWidget;

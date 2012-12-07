@@ -76,7 +76,7 @@ public class Graph extends JPanel {
 		this.repaint();
 	}
 	
-	public int getScaleHeight(){
+	public synchronized int getScaleHeight(){
 		return (dlugoscY + 10) - odstepGora;
 	}
 	

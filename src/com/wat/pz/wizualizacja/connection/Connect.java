@@ -37,7 +37,7 @@ public class Connect extends Thread {
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
 		odstepPunktow = p.getOdstep();
 		this.database = database;
-		customCollection = new CustomCollection(new CustomListener(p));
+		customCollection = new CustomCollection(new CustomListener(p,p));
 		this.indexPlot = indexPlot;
 		Properties prop = new Properties();
 		InputStream in;
