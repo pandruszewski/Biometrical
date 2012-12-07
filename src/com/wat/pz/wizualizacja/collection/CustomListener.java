@@ -1,5 +1,6 @@
 package com.wat.pz.wizualizacja.collection;
 
+import java.awt.Canvas;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,16 +8,24 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.wat.pz.main.Window;
+import com.wat.pz.plot.Plot;
 
 public class CustomListener implements ActionListener {
 
 	JComponent jcomp;
-	JPanel jpanel;
+	Plot jpanel;
 
-	public CustomListener(JComponent tmpJcomp,JPanel jpanel) {
+	public CustomListener(JComponent tmpJcomp,Plot jpanel) {
 
 		super();
 		this.jcomp = tmpJcomp;
+		this.jpanel=jpanel;
+
+	}
+	public CustomListener(Plot jpanel) {
+
+		super();
+	
 		this.jpanel=jpanel;
 
 	}

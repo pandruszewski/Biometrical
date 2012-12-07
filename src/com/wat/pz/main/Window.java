@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferStrategy;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -50,6 +51,7 @@ public class Window extends JFrame {
 	private JButton exitButton = new JButton("Wyjdz");
 	private ProgressMonitor progressMonitor;
 	private ArrayList<Plot> plotList = new ArrayList<Plot>();
+	private BufferStrategy bs;
 
 	public Window() {
 		//this.setUndecorated(true);
@@ -59,7 +61,8 @@ public class Window extends JFrame {
 layer = this.getLayeredPane();
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 		
-		
+		//createBufferStrategy(2);
+		bs=getBufferStrategy();
 		this.getContentPane().add(p);
 		panelDolny.add(openProperties);
 		panelDolny.add(startRead);
@@ -108,7 +111,7 @@ layer.setDoubleBuffered(true);
 
 				for (PropertiesWidget pw : prop.getOknaUstawien()) {
 					
-					plot = new Plot(p, graph);
+					plot = new Plot(p, graph,bs);
 					plot.setPropertiesWidget(pw);
 					plotList.add(plot);
 

@@ -1,5 +1,6 @@
 package com.wat.pz.wizualizacja.connection;
 
+import java.awt.Canvas;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +36,7 @@ public class Connect extends Thread {
 	private ConnectToDB database;
 
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
+		this.plot=p;
 		odstepPunktow = p.getOdstep();
 		this.database = database;
 		customCollection = new CustomCollection(new CustomListener(p,p));

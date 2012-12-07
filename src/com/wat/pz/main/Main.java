@@ -1,5 +1,6 @@
 package com.wat.pz.main;
 
+import javax.swing.RepaintManager;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -17,8 +18,10 @@ public class Main {
 		} catch (Exception ee) {
 			
 		}
-		Window window = new Window();
 		
+
+		Window window = new Window();
+		 RepaintManager.currentManager(window).setDoubleBufferingEnabled(true);
 		window.setSize(500, 500);
 		
 	}
