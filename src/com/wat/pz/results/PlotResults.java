@@ -1,19 +1,28 @@
 package com.wat.pz.results;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.FontRenderContext;
-import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
-import javax.swing.border.LineBorder;
 
 public class PlotResults extends JPanel {
 
@@ -35,31 +44,122 @@ public class PlotResults extends JPanel {
 	private PlotResults plot = null;
 	private double przeskalujWykresX = 1.0;
 	private double przeskalujWykresY = 1.0;
+	private SelectionSquare square = new SelectionSquare();
+	private boolean pressed = false;
+	private JFrame frame;
 
-	public PlotResults(Data dataObject, JPanel panel) {
+	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
+		frame = f;
 		this.data = dataObject;
 		this.panel = panel;
 		plot = this;
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 
 		// ToolTipManager.sharedInstance().setDismissDelay(500);
-		//this.setToolTipText("lalalal");
+		// this.setToolTipText("lalalal");
 		// graphic = this.getGraphics();
-		this.addMouseMotionListener(new MouseMotionListener() {
+
+		Action action = new AbstractAction() {
 
 			@Override
-			public void mouseDragged(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("lala");
+
+			}
+
+		};
+		
+
+		
+		
+
+		this.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent o) {
+
+				square.setEndX(o.getX());
+				square.setEndY(o.getY());
+				repaint();
+				pressed = false;
+				Rectangle screenRect = new Rectangle();
+
+				// System.out.println(square.getStartX() + " " +
+				// getSize().width);
+				screenRect.setBounds(
+						frame.getBounds().x + square.getStartXOnScreen(),
+						frame.getBounds().y + square.getStartYOnScreen(),
+						square.getSize().width, square.getSize().height);
+				BufferedImage capture = null;
+
+				if (square.getWidth() > 0 && square.getHeight() > 0) {
+					try {
+
+						capture = new Robot().createScreenCapture(screenRect);
+
+					} catch (AWTException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					Clipboard clipboard = Toolkit.getDefaultToolkit()
+							.getSystemClipboard();
+					ImageClipboard imageSel = new ImageClipboard(capture);
+					clipboard.setContents(imageSel, null);
+					clipboard = null;
+					imageSel = null;
+					System.gc();
+					// ImageIO.write(capture, "png", new
+					// File(/*chooser.getSelectedFile().toString()*/"plik" +
+					// ".png"));
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent o) {
+				// System.out.println(o.getLocationOnScreen().x);
+				square.setEndX(null);
+				square.setEndY(null);
+				pressed = true;
+				square.setStartX(o.getX());
+				square.setStartY(o.getY());
+				square.setStartXOnScreen(o.getXOnScreen());
+				square.setStartYOnScreen(o.getYOnScreen());
+				repaint();
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 
 			}
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.
-			 * MouseEvent)
-			 */
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		this.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if (pressed) {
+					square.setEndX(e.getX());
+
+					square.setEndY(e.getY());
+					repaint();
+
+				}
+
+			}
+
 			@Override
 			public void mouseMoved(MouseEvent o) {
 				// System.out.println(o.getX() + "  " + o.getY());
@@ -87,46 +187,47 @@ public class PlotResults extends JPanel {
 						p1 = p2;
 						p2 = pTmp;
 					}
-						
-						
 
-					
+					// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
+					// + "P2  " + p2.getX() + "|" + p2.getY());
+					// System.out.println("obliczpunkt " +
+					// obliczPunkt(p1.getY())
+					// + "|" + obliczPunkt(p2.getY()));
 
-					//System.out.println("P1  " + p1.getX() + "|" + p1.getY()
-					//		+ "P2  " + p2.getX() + "|" + p2.getY());
-					//System.out.println("obliczpunkt " + obliczPunkt(p1.getY())
-					//		+ "|" + obliczPunkt(p2.getY()));
-
-
-		
-					
 					if ((o.getY() / przeskalujWykresY) >= plot.obliczPunkt(p1
 							.getY())
 							&& (o.getY() / przeskalujWykresY) <= plot
 									.obliczPunkt(p2.getY()))
-						
+
 					{
-						int oX=(int)((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
-						
-						int ilepowinnobyc= ilePowinno(oX,p1,p2);
-						
-					System.out.println(ilepowinnobyc+"|"+plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY)));
-					//	if(plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))>=ilepowinnobyc-3 && plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))<=ilepowinnobyc+3)
-							if(plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))>=ilepowinnobyc-(0.1*ilepowinnobyc)&&plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))<=ilepowinnobyc+(0.1*ilepowinnobyc))
-						//if(true)
+						int oX = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+
+						int ilepowinnobyc = ilePowinno(oX, p1, p2);
+
+						/*
+						 * System.out.println(ilepowinnobyc + "|" +
+						 * plot.obliczPunkt2((int) (o.getY() /
+						 * przeskalujWykresY)));
+						 */
+						// if(plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))>=ilepowinnobyc-3
+						// &&
+						// plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))<=ilepowinnobyc+3)
+						if (plot.obliczPunkt2((int) (o.getY() / przeskalujWykresY)) >= ilepowinnobyc
+								- (0.1 * ilepowinnobyc)
+								&& plot.obliczPunkt2((int) (o.getY() / przeskalujWykresY)) <= ilepowinnobyc
+										+ (0.1 * ilepowinnobyc))
+						// if(true)
 						{
-								
-							
-						//System.out.print("jest git");
-						plot.setToolTipText("<html>Wspolrzedna X: " +(int)((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
-								+ "<br>Wspolrzedna Y: " + ilepowinnobyc
-								+ "<br>Pomiar urzadzenie nr: " + p1.getIndeks()
-								+ "</html>");
+
+							// System.out.print("jest git");
+							plot.setToolTipText("<html>Wspolrzedna X: "
+									+ (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
+									+ "<br>Wspolrzedna Y: " + ilepowinnobyc
+									+ "<br>Pomiar urzadzenie nr: "
+									+ p1.getIndeks() + "</html>");
 						}
 					}
-				
-					
-					
+
 					else if ((o.getY() / przeskalujWykresY) + 3 >= plot
 							.obliczPunkt(p.getY())
 							&& (o.getY() / przeskalujWykresY) - 3 <= plot
@@ -160,9 +261,16 @@ public class PlotResults extends JPanel {
 	@Override
 	protected void paintComponent(Graphics gg) {
 		super.paintComponent(gg);
-		if (graphic == null)
-			graphic = gg;
 		Graphics2D g = (Graphics2D) gg;
+		// Graphics2D g2 = (Graphics2D) gg;
+
+		float alpha = 0.45f;
+
+		// setSize(frame.getSize());
+		Color color = new Color(0, 0, 1, alpha);
+		g.setPaint(color);
+		square.paintSquare(g);
+
 		g.scale(przeskalujWykresX, przeskalujWykresY);
 		double pomoc = 0;
 		skala = data.getMaxY();
@@ -173,7 +281,6 @@ public class PlotResults extends JPanel {
 				(int) (przeskalujWykresX * (data.getMaxX() + 30)),
 				(int) (przeskalujWykresY * (panel.getSize().height - 30))));
 
-		// g.scale(2.0, 2.0);
 		wysokosc = wysokoscOkna - 20;
 		szerokosc = szerokoscOkna; // dodal Bolec
 
@@ -275,9 +382,9 @@ public class PlotResults extends JPanel {
 
 		return (int) (dlugoscY - (punkt * skala) /* +odstep */+ odstepGora);
 	}
-	
-	public int obliczPunkt2(int punkt){
-		return (int)((dlugoscY+odstepGora-punkt)/skala);
+
+	public int obliczPunkt2(int punkt) {
+		return (int) ((dlugoscY + odstepGora - punkt) / skala);
 	}
 
 	public void paintInfoDialog(Graphics g) {
@@ -296,16 +403,16 @@ public class PlotResults extends JPanel {
 	}
 
 	public int ilePowinno(int x, Point p1, Point p2) {
-		double a=0;
-		int ile= 0;
-		
-		a = ((p1.getY()-p2.getY())/((p1.getX())-(p2.getX())));
-		
-	double b =	p1.getY()- (p1.getX()*a) ; 
-		
-		ile = (int)Math.round(((a*x) +b));
-		//System.out.println(p1.getX()+"|"+p1.getY()+"|||"+p2.getX()+"|"+p2.getY());
-		//System.out.println(a+"|"+x+"|"+ile);
+		double a = 0;
+		int ile = 0;
+
+		a = ((p1.getY() - p2.getY()) / ((p1.getX()) - (p2.getX())));
+
+		double b = p1.getY() - (p1.getX() * a);
+
+		ile = (int) Math.round(((a * x) + b));
+		// System.out.println(p1.getX()+"|"+p1.getY()+"|||"+p2.getX()+"|"+p2.getY());
+		// System.out.println(a+"|"+x+"|"+ile);
 		return ile;
 	}
 }
