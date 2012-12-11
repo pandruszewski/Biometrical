@@ -1,4 +1,4 @@
-package com.wat.pz.show.results;
+package com.wat.pz.results;
 
 import java.io.BufferedReader;
 import java.io.File;

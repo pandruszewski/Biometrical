@@ -1,4 +1,4 @@
-package com.wat.pz.show.results;
+package com.wat.pz.results;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -60,7 +60,7 @@ public class Results extends JFrame{
 			@Override
 			public void stateChanged(ChangeEvent arg) {
 				System.out.println(sliderY.getValue());
-				plot.setPrzeskalujWykresy(sliderY.getValue());
+				plot.setPrzeskalujWykresY(sliderY.getValue());
 			}
 			
 		});

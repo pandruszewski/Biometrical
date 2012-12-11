@@ -1,4 +1,4 @@
-package com.wat.pz.show.results;
+package com.wat.pz.results;
 
 public class Point implements Comparable<Point>{
 	private int x;
