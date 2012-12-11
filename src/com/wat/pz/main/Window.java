@@ -24,7 +24,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.wat.pz.plot.Graph;
 import com.wat.pz.plot.Plot;
-import com.wat.pz.show.results.Results;
+import com.wat.pz.results.Results;
 import com.wat.pz.wizualizacja.connection.Connect;
 import com.wat.pz.wizualizacja.connection.ConnectToDB;
 
