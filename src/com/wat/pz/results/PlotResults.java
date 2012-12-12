@@ -1,5 +1,6 @@
 package com.wat.pz.results;
 
+import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,7 +10,9 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -21,7 +24,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 
 public class PlotResults extends JPanel {
@@ -72,6 +74,18 @@ public class PlotResults extends JPanel {
 
 		
 		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
 
 		this.addMouseListener(new MouseListener() {
 
@@ -82,36 +96,7 @@ public class PlotResults extends JPanel {
 				square.setEndY(o.getY());
 				repaint();
 				pressed = false;
-				Rectangle screenRect = new Rectangle();
-
-				// System.out.println(square.getStartX() + " " +
-				// getSize().width);
-				screenRect.setBounds(
-						frame.getBounds().x + square.getStartXOnScreen(),
-						frame.getBounds().y + square.getStartYOnScreen(),
-						square.getSize().width, square.getSize().height);
-				BufferedImage capture = null;
-
-				if (square.getWidth() > 0 && square.getHeight() > 0) {
-					try {
-
-						capture = new Robot().createScreenCapture(screenRect);
-
-					} catch (AWTException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					Clipboard clipboard = Toolkit.getDefaultToolkit()
-							.getSystemClipboard();
-					ImageClipboard imageSel = new ImageClipboard(capture);
-					clipboard.setContents(imageSel, null);
-					clipboard = null;
-					imageSel = null;
-					System.gc();
-					// ImageIO.write(capture, "png", new
-					// File(/*chooser.getSelectedFile().toString()*/"plik" +
-					// ".png"));
-				}
+			//copyToClipboard();
 			}
 
 			@Override
@@ -258,6 +243,40 @@ public class PlotResults extends JPanel {
 
 	}
 
+	
+	public void copyToClipboard()
+	{
+		Rectangle screenRect = new Rectangle();
+
+		// System.out.println(square.getStartX() + " " +
+		// getSize().width);
+		screenRect.setBounds(
+				frame.getBounds().x + square.getStartXOnScreen(),
+				frame.getBounds().y + square.getStartYOnScreen(),
+				square.getSize().width, square.getSize().height);
+		BufferedImage capture = null;
+
+		if (square.getWidth() > 0 && square.getHeight() > 0) {
+			try {
+
+				capture = new Robot().createScreenCapture(screenRect);
+
+			} catch (AWTException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Clipboard clipboard = Toolkit.getDefaultToolkit()
+					.getSystemClipboard();
+			ImageClipboard imageSel = new ImageClipboard(capture);
+			clipboard.setContents(imageSel, null);
+			clipboard = null;
+			imageSel = null;
+			System.gc();
+			// ImageIO.write(capture, "png", new
+			// File(/*chooser.getSelectedFile().toString()*/"plik" +
+			// ".png"));
+		}
+	}
 	@Override
 	protected void paintComponent(Graphics gg) {
 		super.paintComponent(gg);

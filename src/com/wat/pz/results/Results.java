@@ -1,11 +1,17 @@
 package com.wat.pz.results;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,12 +24,18 @@ import javax.xml.xpath.XPathExpressionException;
 import com.wat.pz.plot.Graph;
 
 public class Results extends JFrame{
+	class WindowEventHandler extends WindowAdapter {
+		  public void windowClosing(WindowEvent evt) {
+		   Toolkit.getDefaultToolkit().removeAWTEventListener(awt);
+		   System.out.println("loL");
+		  }};
+
 	private PlotResults plot = null;
 	private Graph graph = null;
 	private Data data = null;
 	private JSlider sliderY;
 	private JSlider sliderX;
-	
+	private AWTEventListener awt;
 	
 	public Results(String file){
 		try {
@@ -32,6 +44,7 @@ public class Results extends JFrame{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		//setSize(300,300);
 		JPanel panel = new JPanel();
 		sliderY = new JSlider(JSlider.VERTICAL, 10, 30, 10);
@@ -39,10 +52,29 @@ public class Results extends JFrame{
 		//panel.setSize(this.getSize());
 		plot = new PlotResults(data, (JPanel)getContentPane(), this);
 		
+		awt=new AWTEventListener() {
+
+			@Override
+			public void eventDispatched(AWTEvent event) {
+				// TODO Auto-generated metho stub
+				KeyEvent e = (KeyEvent) event;
+
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C) {
+
+					if (e.getID() == KeyEvent.KEY_PRESSED) {
+				plot.copyToClipboard();
+					}
+				}
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_O) {
+
+					
+				}
+
+			}
+		};
+		Toolkit.getDefaultToolkit().addAWTEventListener(awt, AWTEvent.KEY_EVENT_MASK);
 		
-		
-		
-		
+		this.addWindowListener(new WindowEventHandler());
 		
 		
 		plot.setBackground(Color.black);
