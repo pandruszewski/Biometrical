@@ -104,7 +104,8 @@ gg.drawImage(drawImage(), 0, 0, this);
 	}
 	
 public BufferedImage drawImage(){
-	BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
 	  Graphics2D g = bi.createGraphics();
 		Color kolor = ((ColorSwatch) propertiesWidget.getColorButton()
 				.getIcon()).getColor();

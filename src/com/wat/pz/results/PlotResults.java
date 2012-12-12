@@ -9,19 +9,19 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 
 public class PlotResults extends JPanel {
@@ -59,58 +59,17 @@ public class PlotResults extends JPanel {
 		// this.setToolTipText("lalalal");
 		// graphic = this.getGraphics();
 
-		Action action = new AbstractAction() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("lala");
-
-			}
-
-		};
-		
-
-		
-		
-
 		this.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseReleased(MouseEvent o) {
-
-				square.setEndX(o.getX());
-				square.setEndY(o.getY());
-				repaint();
-				pressed = false;
-				Rectangle screenRect = new Rectangle();
-
-				// System.out.println(square.getStartX() + " " +
-				// getSize().width);
-				screenRect.setBounds(
-						frame.getBounds().x + square.getStartXOnScreen(),
-						frame.getBounds().y + square.getStartYOnScreen(),
-						square.getSize().width, square.getSize().height);
-				BufferedImage capture = null;
-
-				if (square.getWidth() > 0 && square.getHeight() > 0) {
-					try {
-
-						capture = new Robot().createScreenCapture(screenRect);
-
-					} catch (AWTException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					Clipboard clipboard = Toolkit.getDefaultToolkit()
-							.getSystemClipboard();
-					ImageClipboard imageSel = new ImageClipboard(capture);
-					clipboard.setContents(imageSel, null);
-					clipboard = null;
-					imageSel = null;
-					System.gc();
-					// ImageIO.write(capture, "png", new
-					// File(/*chooser.getSelectedFile().toString()*/"plik" +
-					// ".png"));
+				if (o.getXOnScreen() < (frame.getSize().width - 22)
+						&& o.getYOnScreen() < (frame.getSize().height - 20)) {
+					square.setEndX(o.getX());
+					square.setEndY(o.getY());
+					repaint();
+					pressed = false;
+					// copyToClipboard();
 				}
 			}
 
@@ -150,7 +109,8 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if (pressed) {
+				if (pressed && e.getXOnScreen() < (frame.getSize().width - 22)
+						&& e.getYOnScreen() < (frame.getSize().height - 20)) {
 					square.setEndX(e.getX());
 
 					square.setEndY(e.getY());
@@ -258,16 +218,68 @@ public class PlotResults extends JPanel {
 
 	}
 
+	public void copyImage(int parametr) {
+		Rectangle screenRect = new Rectangle();
+
+		// System.out.println(square.getStartX() + " " +
+		// getSize().width);
+
+		if (square.getWidth() > 0 && square.getHeight() > 0) {
+
+			// System.out.println(odstepGora + "  " + square.getStartYOnScreen()
+			// + "   " + (frame.getBounds().y + square.getStartYOnScreen()));
+			screenRect.setBounds(square.getStartXOnScreen(),
+					square.getStartYOnScreen(), square.getSize().width,
+					square.getSize().height);
+			BufferedImage capture = null;
+			try {
+
+				capture = new Robot().createScreenCapture(screenRect);
+
+			} catch (AWTException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (parametr == 1) {
+				Clipboard clipboard = Toolkit.getDefaultToolkit()
+						.getSystemClipboard();
+				ImageClipboard imageSel = new ImageClipboard(capture);
+				clipboard.setContents(imageSel, null);
+				clipboard = null;
+				imageSel = null;
+			} else if (parametr == 2) {
+				JFileChooser chooser = new JFileChooser();
+				if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+					chooser.hide(); 
+					try {
+						ImageIO.write(capture, "png",
+								new File((chooser.getSelectedFile().toString()
+										.endsWith(".png") ? chooser
+										.getSelectedFile().toString() : chooser
+										.getSelectedFile().toString() + ".png")));
+						capture = null;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			System.gc();
+
+		}
+	}
+
 	@Override
 	protected void paintComponent(Graphics gg) {
 		super.paintComponent(gg);
 		Graphics2D g = (Graphics2D) gg;
 		// Graphics2D g2 = (Graphics2D) gg;
 
-		float alpha = 0.45f;
+		float alpha = 0.35f;
 
 		// setSize(frame.getSize());
-		Color color = new Color(0, 0, 1, alpha);
+		Color color = new Color(1, 1, 1, alpha);
 		g.setPaint(color);
 		square.paintSquare(g);
 

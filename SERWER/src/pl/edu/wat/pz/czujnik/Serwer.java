@@ -15,7 +15,7 @@ public class Serwer {
 	public Serwer() {
 		rn = new Random();
 		try {
-			server = new ServerSocket(8180);
+			server = new ServerSocket(8188);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
