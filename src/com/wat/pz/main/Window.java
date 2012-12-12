@@ -1,12 +1,17 @@
 package com.wat.pz.main;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,11 +23,13 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ProgressMonitor;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.thehowtotutorial.splashscreen.JSplash;
 import com.wat.pz.plot.Graph;
 import com.wat.pz.plot.Plot;
 import com.wat.pz.results.Results;
@@ -42,7 +49,10 @@ public class Window extends JFrame {
 	public static ConnectToDB database;
 	private Graph graph = new Graph(p);
 	private static Plot plot;
-	public volatile static JLayeredPane layer;     // Przemek zjebales... layeredpanel nie mo¿e byc na wszytskim! trzeba zrobic po srodku go! 
+	public volatile static JLayeredPane layer; // Przemek zjebales...
+												// layeredpanel nie mo¿e byc na
+												// wszytskim! trzeba zrobic po
+												// srodku go!
 	private JPanel panelDolny = new JPanel();
 	private JButton openProperties = new JButton("Wlasciwosci");
 	private JButton startRead = new JButton("Zacznij Odczyt");
@@ -55,15 +65,16 @@ public class Window extends JFrame {
 	private BufferStrategy bs;
 
 	public Window() {
-		//this.setUndecorated(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super("Muscle Explorer");
+		// this.setUndecorated(true);
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.getLayeredPane().setSize(this.getSize().height,
 				this.getSize().width);
-layer = this.getLayeredPane();
+		layer = this.getLayeredPane();
 		this.getContentPane().setLayout(new GridLayout(2, 1));
-		
-		//createBufferStrategy(2);
-		bs=getBufferStrategy();
+
+		// createBufferStrategy(2);
+		bs = getBufferStrategy();
 		this.getContentPane().add(p);
 		panelDolny.add(openProperties);
 		panelDolny.add(startRead);
@@ -72,19 +83,81 @@ layer = this.getLayeredPane();
 		panelDolny.add(resultWindow);
 		panelDolny.add(exitButton);
 		this.getContentPane().add(panelDolny);
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+	    Image image = toolkit.getImage("ikonka.png");
+	    
+	    this.setIconImage(image);
+	    
+		if (!SystemTray.isSupported()) {
+		      System.out.println("SystemTray is not supported");
+		      return;
+		    }
 
+		    SystemTray tray = SystemTray.getSystemTray();
+		    
+
+		    PopupMenu menu = new PopupMenu();
+
+		    MenuItem messageItem = new MenuItem("Show Window");
+		    messageItem.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent e) {
+		        //JOptionPane.showMessageDialog(null, "www.java2s.com");
+		    	  setVisible(true);
+		      }
+		    });
+		    menu.add(messageItem);
+
+		    MenuItem closeItem = new MenuItem("Close");
+		    closeItem.addActionListener(new ActionListener() {
+		      public void actionPerformed(ActionEvent e) {
+		        System.exit(0);
+		      }
+		    });
+		    menu.add(closeItem);
+		    TrayIcon icon = new TrayIcon(image, "Muscle Explorer", menu);
+		    icon.setImageAutoSize(true);
+
+		    try {
+				tray.add(icon);
+			} catch (AWTException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		
+		
+		
+		
 		this.pack();
 		this.setSize(500, 500);
-		//this.setLocationRelativeTo(null);
-		
-		this.setVisible(true);
+		// this.setLocationRelativeTo(null);
+
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
-		
+		try {
+			JSplash jsplash = new JSplash(
+					Window.class.getResource("splash.jpg"), true, true, false,
+					null, null, Color.red, Color.black);
+			jsplash.splashOn();
+			jsplash.setProgress(20, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(40, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(60, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(80, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(100, "Loading");
+			Thread.sleep(500);
+			jsplash.splashOff();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		database = null;
 		layer.add(graph, new Integer(0));
-layer.setDoubleBuffered(true);
+		layer.setDoubleBuffered(true);
+		this.setVisible(true);
 		openProperties.addActionListener(new ActionListener() {
 
 			@Override
@@ -96,8 +169,8 @@ layer.setDoubleBuffered(true);
 
 		});
 		if (database == null) {
-			//database = new ConnectToDB();
-			//database.removeAllRows();
+			// database = new ConnectToDB();
+			// database.removeAllRows();
 		}
 		startRead.addActionListener(new ActionListener() {
 
@@ -111,8 +184,8 @@ layer.setDoubleBuffered(true);
 				plotList.clear();
 
 				for (PropertiesWidget pw : prop.getOknaUstawien()) {
-					
-					plot = new Plot(p, graph,bs);
+
+					plot = new Plot(p, graph, bs);
 					plot.setPropertiesWidget(pw);
 					plotList.add(plot);
 
@@ -237,7 +310,7 @@ layer.setDoubleBuffered(true);
 
 						// Data parse = new Data(file);
 						Results resultWindow = new Results(file);
-					
+
 						resultWindow.setVisible(true);
 
 					}
@@ -245,13 +318,13 @@ layer.setDoubleBuffered(true);
 			}
 
 		});
-		
+
 		exitButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
-				
+
 			}
 		});
 	}

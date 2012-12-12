@@ -219,18 +219,24 @@ public class PlotResults extends JPanel {
 	}
 
 	public void copyImage(int parametr) {
-		Rectangle screenRect = new Rectangle();
 
 		// System.out.println(square.getStartX() + " " +
 		// getSize().width);
 
 		if (square.getWidth() > 0 && square.getHeight() > 0) {
+			int w = square.getSize().width;
+			int h = square.getSize().height;
+			square.setWidth(-1);
+			plot.paintImmediately(square.getStartX(), square.getStartY(), w, h);
 
+			Rectangle screenRect = new Rectangle();
 			// System.out.println(odstepGora + "  " + square.getStartYOnScreen()
 			// + "   " + (frame.getBounds().y + square.getStartYOnScreen()));
+			// plot.repaint();
+
 			screenRect.setBounds(square.getStartXOnScreen(),
-					square.getStartYOnScreen(), square.getSize().width,
-					square.getSize().height);
+					square.getStartYOnScreen(), w, h);
+
 			BufferedImage capture = null;
 			try {
 
@@ -250,9 +256,11 @@ public class PlotResults extends JPanel {
 			} else if (parametr == 2) {
 				JFileChooser chooser = new JFileChooser();
 				if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-					chooser.hide(); 
+					chooser.hide();
 					try {
-						ImageIO.write(capture, "png",
+						ImageIO.write(
+								capture,
+								"png",
 								new File((chooser.getSelectedFile().toString()
 										.endsWith(".png") ? chooser
 										.getSelectedFile().toString() : chooser
@@ -264,7 +272,7 @@ public class PlotResults extends JPanel {
 					}
 				}
 			}
-			
+
 			System.gc();
 
 		}
@@ -279,7 +287,7 @@ public class PlotResults extends JPanel {
 		float alpha = 0.35f;
 
 		// setSize(frame.getSize());
-		Color color = new Color(1, 1, 1, alpha);
+		Color color = new Color(0, 0, 1, alpha);
 		g.setPaint(color);
 		square.paintSquare(g);
 
@@ -417,9 +425,11 @@ public class PlotResults extends JPanel {
 	public int ilePowinno(int x, Point p1, Point p2) {
 		double a = 0;
 		int ile = 0;
-
-		a = ((p1.getY() - p2.getY()) / ((p1.getX()) - (p2.getX())));
-
+		if ((p1.getX()) - (p2.getX()) == 0) {
+			a = 0;
+		} else {
+			a = ((p1.getY() - p2.getY()) / ((p1.getX()) - (p2.getX())));
+		}
 		double b = p1.getY() - (p1.getX() * a);
 
 		ile = (int) Math.round(((a * x) + b));
