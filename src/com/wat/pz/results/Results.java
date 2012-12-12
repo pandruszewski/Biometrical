@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -35,7 +37,14 @@ public class Results extends JFrame{
 		sliderY = new JSlider(JSlider.VERTICAL, 10, 30, 10);
 		sliderX = new JSlider(JSlider.HORIZONTAL, 10, 30, 10);
 		//panel.setSize(this.getSize());
-		plot = new PlotResults(data, (JPanel)getContentPane());
+		plot = new PlotResults(data, (JPanel)getContentPane(), this);
+		
+		
+		
+		
+		
+		
+		
 		plot.setBackground(Color.black);
 		JScrollPane scroll = new JScrollPane(plot, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener() {
