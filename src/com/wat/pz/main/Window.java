@@ -5,13 +5,14 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -236,6 +237,7 @@ layer.setDoubleBuffered(true);
 
 						// Data parse = new Data(file);
 						Results resultWindow = new Results(file);
+					
 						resultWindow.setVisible(true);
 
 					}
