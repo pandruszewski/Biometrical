@@ -1,6 +1,7 @@
 package com.wat.pz.main;
 
 import java.awt.AWTException;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -23,7 +24,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ProgressMonitor;
 import javax.swing.filechooser.FileFilter;
@@ -70,12 +70,21 @@ public class Window extends JFrame {
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.getLayeredPane().setSize(this.getSize().height,
 				this.getSize().width);
-		layer = this.getLayeredPane();
+		/*layer = this.getLayeredPane();*/
+		layer = new JLayeredPane();
+		//layer.setLayout(new BorderLayout());
+		p.setLayout(new BorderLayout());
+		p.add(layer);
+		
+		
+		
+		
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 
 		// createBufferStrategy(2);
 		bs = getBufferStrategy();
 		this.getContentPane().add(p);
+		
 		panelDolny.add(openProperties);
 		panelDolny.add(startRead);
 		panelDolny.add(stopMeasure);
@@ -134,6 +143,7 @@ public class Window extends JFrame {
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
 		try {
+			//System.out.println(Window.class.getResource("splash.jpg"));
 			JSplash jsplash = new JSplash(
 					Window.class.getResource("splash.jpg"), true, true, false,
 					null, null, Color.red, Color.black);
