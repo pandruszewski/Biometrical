@@ -62,22 +62,28 @@ public class CustomCollection extends LinkedList<Double> {
 	public synchronized double getScaleNumber(int rozmiar) {
 
 		/* if (rozmiar > 0 && rozmiar < super.size()) { */
-		if (rozmiar > 0 && super.size() > 0) {
+		if (rozmiar > 0 && super.size() - 1 > 0) {
 			List<Double> lista;
-			if (rozmiar >= super.size())
+			if (rozmiar >= (super.size() - 1)) {
 				lista = super.subList(0, super.size() - 1);
-			else
+			} else {
 				lista = super.subList((super.size() - 1 - rozmiar),
 						super.size() - 1);
+			}
+			// System.out.println("wjechal  "+ rozmiar);
 			max = Collections.max(lista);
 			min = Collections.min(lista);
+			//lista = null;
+			//System.gc();
 			// System.out.println("max= " + max + " min = " + min + " size = " +
 			// super.size());
 		}
 		if ((-min) > max) {
 			return (-min);
 		}
-		return max;
+		if( max- min > 2000) return /* max */max - min;
+		else if(max - min < 1000 ) return 20000;
+		return 1000;
 	}
 
 	@Override
@@ -91,7 +97,8 @@ public class CustomCollection extends LinkedList<Double> {
 
 		super.addLast(e);
 
-		customListener.refresh();//       actionPerformed(new ActionEvent(this, 1, "add"));
+		customListener.refresh();// actionPerformed(new ActionEvent(this, 1,
+									// "add"));
 	}
 
 	@Override

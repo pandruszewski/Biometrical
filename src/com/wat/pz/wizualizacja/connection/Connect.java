@@ -1,6 +1,5 @@
 package com.wat.pz.wizualizacja.connection;
 
-import java.awt.Canvas;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +15,6 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
-import com.wat.pz.main.Window;
 import com.wat.pz.plot.Plot;
 import com.wat.pz.wizualizacja.collection.CustomCollection;
 import com.wat.pz.wizualizacja.collection.CustomListener;
@@ -34,6 +32,7 @@ public class Connect extends Thread {
 	private int odstepPunktow = 0;
 	private long wspolrzednaX = 0;
 	private ConnectToDB database;
+	private BufferedWriter bw = null;
 
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
 		this.plot=p;
@@ -50,6 +49,12 @@ public class Connect extends Thread {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			bw = new BufferedWriter(new FileWriter(new File("pomiar.txt")));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,16 +99,25 @@ public class Connect extends Thread {
 	public synchronized void run() {
 		long a, b;
 		if (in != null) {
-			while (in.hasNext()) {
+			while (in.hasNext() && !socket.isClosed()) {
 
-				String content = in.nextLine();
-
-				this.customCollection.addLast(Double.parseDouble(content));
+				//String content = in.nextLine();
+				int content = in.nextInt();
+				this.customCollection.addLast(/*Double.parseDouble(content)*/(double)content);
+				try {
+					bw.write(String.valueOf(content));
+					bw.newLine();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				wspolrzednaX = wspolrzednaX + odstepPunktow;
 				//database.addData(String.valueOf(wspolrzednaX), content,
 					//	String.valueOf(indexPlot));
 			}
 			try {
+				System.out.println("zakmnieto");
+				bw.close();
 				socket.close();
 				System.out.println(this.isAlive());
 			} catch (IOException e) {

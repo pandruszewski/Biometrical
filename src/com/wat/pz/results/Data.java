@@ -80,9 +80,7 @@ public class Data {
 		Point max = Collections.max(points);
 		Point min = Collections.min(points);
 		if (min.getY() < 0) {
-			if (-min.getY() > max.getY()) {
-				return -min.getY();
-			}
+			
 		}
 		return max.getY();
 

@@ -126,7 +126,7 @@ public BufferedImage drawImage(){
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-		if (dlugosc > 1) {
+		if (dlugosc >= 0) {
 			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
 					.intValue());
 		}
@@ -136,16 +136,16 @@ public BufferedImage drawImage(){
 		 synchronized (this) {
 		while (i > 45) {
 
-			if (dlugosc > 1 && connect.getCustomCollection() != null) {
+			if (dlugosc >= 0 && connect.getCustomCollection() != null) {
 
 				skala = connect.getCustomCollection().getScaleNumber(
 						(p.getSize().width - 40) / odstep);
 				dlugoscY = graph.getScaleHeight();
 
-				graph.scaleGraph(skala / dlugoscY);
+				graph.scaleGraph(skala / dlugoscY, connect.getCustomCollection().getMin().intValue());
 				skala = (double) dlugoscY / skala;
 				v = obliczPunkt((connect.getCustomCollection().get(dlugosc)
-						.intValue()));
+						.intValue()-connect.getCustomCollection().getMin().intValue()));
 				//g.drawLine        (i - odstep, v, i, j);
 				g.draw(new Line2D.Double(i - odstep, v, i, j));
 				dlugosc -= 1;
@@ -169,10 +169,11 @@ public BufferedImage drawImage(){
 
 	public int obliczPunkt(int punkt) {
 		if (punkt > 0) {
-			return (int) (dlugoscY - (skala * punkt) + graph.getOdstepGora());
+			//System.out.println(punkt + "   >>>  " + (int) ((this.getSize().height - graph.getOdstepDol()) - (skala * punkt)));
+			return (int) ((p.getSize().height - graph.getOdstepDol()) - (skala * punkt) /*+ graph.getOdstepGora()*/);
 		}
 
-		return (int) (dlugoscY - (skala * punkt) + graph.getOdstepGora());
+		return (int) ((this.getSize().height - graph.getOdstepDol()) + (skala * punkt) /*+ graph.getOdstepGora()*/);
 	}
 
 	public Connect getConnect() {

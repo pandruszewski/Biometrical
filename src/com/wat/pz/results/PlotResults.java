@@ -35,7 +35,7 @@ public class PlotResults extends JPanel {
 	private int dlugoscX = 0; // dodal Bolec do rysowania podzialki pionowej
 	private int odstep = 20;
 	private int odstepX = 10;
-	private int odstepDol = 0;
+	private int odstepDol = 20;
 	private double skala = 1.0;
 	private int odstepGora = 0;
 	private int odstepOdPoczatkuWykresu = 0;
@@ -307,23 +307,28 @@ public class PlotResults extends JPanel {
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
 
 		int mojOdstepDol = (wysokosc - (dlugoscY + 10)) / odstep;
-		odstepDol = ((mojOdstepDol * odstep) + dlugoscY + 10);
-		int mojOdstepGora = (dlugoscY) / odstep;
-		odstepGora = ((dlugoscY + 10) - (mojOdstepGora * odstep));
+		//odstepDol = ((mojOdstepDol * odstep) + dlugoscY + 10);
+		int mojOdstepGora = (panel.getSize().height- 30) / odstep;
+//		odstepGora = ((dlugoscY + 10) - (mojOdstepGora * odstep));
+		odstepGora = ((panel.getSize().height- 30 + 10) - (mojOdstepGora * odstep));
 		pomoc = skala;
-		skala = skala / ((dlugoscY + 10) - odstepGora);
+//		skala = skala / ((dlugoscY + 10) - odstepGora);
+		skala = skala / (((panel.getSize().height-30) + 10) - odstepGora);
 
+		
+		
+		
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
-		g.drawString(String.valueOf((int) (valueOnLeft)), 0, dlugoscY + 10
-				+ (odstep / 3));
-		g.drawLine(40, dlugoscY + 10, this.getSize().width, dlugoscY + 10);
+//		g.drawString(String.valueOf((int) (valueOnLeft)), 0, dlugoscY + 10
+//				+ (odstep / 3));
+//		g.drawLine(40, dlugoscY + 10, this.getSize().width, dlugoscY + 10);
 
 		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
 											// pionowej
 
-		for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
+		/*for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
 
 			valueOnLeft += odstep;
 			g.drawLine(40, a, this.getSize().width, a);
@@ -332,12 +337,36 @@ public class PlotResults extends JPanel {
 
 			minA = a; // dodal BOlec do rysowania podzialki pionowej
 
+		}*/
+		
+		for (int a =panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
+
+			/*valueOnLeft += odstep;
+			g.drawLine(40, a, this.getSize().width, a);
+			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
+					+ (odstep / 3));*/
+			g.drawLine(40, a, this.getSize().width, a);
+			
+			////POCZATEK EDYCJI KEMAL DZIS KOMBINUJE NAD SKALA
+			
+			int wartosc = (int) (valueOnLeft *skala);
+			
+						
+			
+			
+			g.drawString(String.valueOf(wartosc), 0, a
+					+ (odstep / 3));
+			valueOnLeft += odstep;
+			odstepGora = a;
+
+			minA = a; // dodal BOlec do rysowania podzialki pionowej
+
 		}
 
 		int maxA = dlugoscY + 10 + odstep;
 		// System.out.println("odstep gora:  " + odstepGora);
 		valueOnLeft = 0;
-		for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
+		/*for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
 
 			valueOnLeft -= odstep;
 
@@ -346,7 +375,7 @@ public class PlotResults extends JPanel {
 					+ (odstep / 3));
 
 			maxA = a; // dodal BOlec do rysowania podzialki pionowej
-		}
+		}*/
 
 		int bolectmp = (int) Math.ceil(wysokosc * skala);
 
@@ -377,8 +406,10 @@ public class PlotResults extends JPanel {
 		// end edit by bolec
 
 		dlugoscY = (dlugoscY + 10 - odstepGora);
-		skala = (dlugoscY) / pomoc;
-
+//		skala = (dlugoscY) / pomoc;
+		skala = (panel.getSize().height - 30 - odstepGora) / pomoc;
+		
+		
 		g.setColor(Color.yellow);
 		Point o1 = data.points.get(0);
 		Point o2;
@@ -397,10 +428,10 @@ public class PlotResults extends JPanel {
 
 	public int obliczPunkt(int punkt) {
 		if (punkt > 0) {
-			return (int) (dlugoscY - (punkt * skala) /* +odstep */+ odstepGora);
+			return (int) ((int) /*(panel.getSize().height- 30  - (punkt * skala)  +odstep + odstepGora);*/(panel.getSize().height - 37 - odstepDol) - (skala * punkt) + odstepGora);
 		}
 
-		return (int) (dlugoscY - (punkt * skala) /* +odstep */+ odstepGora);
+		return (int) ((int) /*(dlugoscY panel.getSize().height- 30 - (punkt * skala)  +odstep + odstepGora)*/(panel.getSize().height - 37 - odstepDol) + (skala * punkt) + odstepGora);
 	}
 
 	public int obliczPunkt2(int punkt) {

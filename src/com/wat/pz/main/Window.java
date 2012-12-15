@@ -142,7 +142,7 @@ public class Window extends JFrame {
 
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
-		try {
+		/*try {
 			//System.out.println(Window.class.getResource("splash.jpg"));
 			JSplash jsplash = new JSplash(
 					Window.class.getResource("splash.jpg"), true, true, false,
@@ -162,7 +162,7 @@ public class Window extends JFrame {
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
+		}*/
 
 		database = null;
 		layer.add(graph, new Integer(0));
@@ -228,8 +228,8 @@ public class Window extends JFrame {
 				Connect con = null;
 				for (Plot p : plotList) {
 					con = p.getConnect();
-					con.interrupt();
-					con.suspend();
+					//con.interrupt();
+					//con.suspend();
 					con.closeSocket();
 
 				}

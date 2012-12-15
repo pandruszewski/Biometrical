@@ -14,7 +14,8 @@ public class Graph extends JPanel {
 	private int dlugoscY = 0;
 	private double skala = 1.0;
 	private int odstepGora = 0;
-	private int odstepDol = 0;
+	private int odstepDol = 20;
+	private int min = 0;
 
 	public Graph(JPanel panel) {
 		this.panel = panel;
@@ -38,27 +39,37 @@ public class Graph extends JPanel {
 		/* System.out.println(dlugoscY); */
 		g2.setColor(Color.gray);
 		/* g.drawLine(40, 10, 40, wysokosc); */
-		g2.drawString(String.valueOf((int) (valueOnLeft)), 0, dlugoscY + 10
-				+ (odstep / 3));
-		g2.drawLine(40, dlugoscY + 10, this.getSize().width, dlugoscY + 10);
+		/*g2.drawString(String.valueOf((int) (valueOnLeft)), 0, dlugoscY + 10
+				+ (odstep / 3));*/
+		/*g2.drawLine(40, dlugoscY + 10, this.getSize().width, dlugoscY + 10);*/
 
-		for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
-			valueOnLeft += odstep;
+		for (int a = panel.getSize().height - odstepDol; a > 9; a -= odstep) {
+			
 			g2.drawLine(40, a, this.getSize().width, a);
-			g2.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
+			
+			////POCZATEK EDYCJI KEMAL DZIS KOMBINUJE NAD SKALA
+			
+			int wartosc = (int) (valueOnLeft *skala);
+			wartosc += min;
+			if(wartosc< 0) wartosc= -wartosc;
+						
+			
+			
+			g2.drawString(String.valueOf(wartosc), 0, a
 					+ (odstep / 3));
+			valueOnLeft += odstep;
 			odstepGora = a;
 		}
 
 		valueOnLeft = 0;
-		for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
+		/*for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
 			valueOnLeft -= odstep;
 
 			g2.drawLine(40, a, this.getSize().width, a);
 			g2.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
 					+ (odstep / 3));
 			odstepDol = a;
-		}
+		}*/
 
 		/*
 		 * g2.drawLine(40, odstepGora, 40, odstepDol); int j =
@@ -71,13 +82,15 @@ public class Graph extends JPanel {
 		return bi;
 	}
 
-	public void scaleGraph(double skala) {
+	public void scaleGraph(double skala, int min) {
 		this.skala = skala;
+		this.min = min;
 		this.repaint();
+		
 	}
 
 	public synchronized int getScaleHeight() {
-		return (dlugoscY + 10) - odstepGora;
+		return this.getSize().height - odstepDol - odstepGora;
 	}
 
 	public int getOdstepGora() {
