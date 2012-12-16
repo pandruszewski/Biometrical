@@ -112,8 +112,8 @@ public class Connect extends Thread {
 					e.printStackTrace();
 				}
 				wspolrzednaX = wspolrzednaX + odstepPunktow;
-				//database.addData(String.valueOf(wspolrzednaX), content,
-					//	String.valueOf(indexPlot));
+				database.addData(String.valueOf(wspolrzednaX), String.valueOf(content),
+						String.valueOf(indexPlot));
 			}
 			try {
 				System.out.println("zakmnieto");

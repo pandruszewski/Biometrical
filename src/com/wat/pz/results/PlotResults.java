@@ -282,11 +282,8 @@ public class PlotResults extends JPanel {
 	protected void paintComponent(Graphics gg) {
 		super.paintComponent(gg);
 		Graphics2D g = (Graphics2D) gg;
-		// Graphics2D g2 = (Graphics2D) gg;
 
 		float alpha = 0.35f;
-
-		// setSize(frame.getSize());
 		Color color = new Color(0, 0, 1, alpha);
 		g.setPaint(color);
 		square.paintSquare(g);
@@ -305,15 +302,11 @@ public class PlotResults extends JPanel {
 		szerokosc = szerokoscOkna; // dodal Bolec
 
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
-
-		int mojOdstepDol = (wysokosc - (dlugoscY + 10)) / odstep;
-		//odstepDol = ((mojOdstepDol * odstep) + dlugoscY + 10);
-		int mojOdstepGora = (panel.getSize().height- 30) / odstep;
-//		odstepGora = ((dlugoscY + 10) - (mojOdstepGora * odstep));
-		odstepGora = ((panel.getSize().height- 30 + 10) - (mojOdstepGora * odstep));
+		int mojOdstepGora = (wysokoscOkna) / odstep;
+		odstepGora = ((wysokoscOkna) - (mojOdstepGora * odstep));
+		if(odstepGora<= 9) odstepGora += odstep;
 		pomoc = skala;
-//		skala = skala / ((dlugoscY + 10) - odstepGora);
-		skala = skala / (((panel.getSize().height-30) + 10) - odstepGora);
+		skala = skala / (((wysokoscOkna))- odstepDol - odstepGora);
 
 		
 		
@@ -321,10 +314,6 @@ public class PlotResults extends JPanel {
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
-//		g.drawString(String.valueOf((int) (valueOnLeft)), 0, dlugoscY + 10
-//				+ (odstep / 3));
-//		g.drawLine(40, dlugoscY + 10, this.getSize().width, dlugoscY + 10);
-
 		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
 											// pionowej
 
@@ -346,15 +335,8 @@ public class PlotResults extends JPanel {
 			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
 					+ (odstep / 3));*/
 			g.drawLine(40, a, this.getSize().width, a);
-			
-			////POCZATEK EDYCJI KEMAL DZIS KOMBINUJE NAD SKALA
-			
-			int wartosc = (int) (valueOnLeft *skala);
-			
-						
-			
-			
-			g.drawString(String.valueOf(wartosc), 0, a
+
+			g.drawString(String.valueOf((int)(valueOnLeft *skala)), 0, a
 					+ (odstep / 3));
 			valueOnLeft += odstep;
 			odstepGora = a;
@@ -363,8 +345,8 @@ public class PlotResults extends JPanel {
 
 		}
 
+
 		int maxA = dlugoscY + 10 + odstep;
-		// System.out.println("odstep gora:  " + odstepGora);
 		valueOnLeft = 0;
 		/*for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
 
@@ -380,7 +362,7 @@ public class PlotResults extends JPanel {
 		int bolectmp = (int) Math.ceil(wysokosc * skala);
 
 		int roznicaWysY = 0;
-
+/*
 		// EDITED By BOLEC -- wyswietlanie podzialki pionowej
 
 		FontRenderContext frc = g.getFontRenderContext();
@@ -404,10 +386,8 @@ public class PlotResults extends JPanel {
 		}
 
 		// end edit by bolec
-
-		dlugoscY = (dlugoscY + 10 - odstepGora);
-//		skala = (dlugoscY) / pomoc;
-		skala = (panel.getSize().height - 30 - odstepGora) / pomoc;
+*/
+		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
 		
 		
 		g.setColor(Color.yellow);
@@ -428,10 +408,10 @@ public class PlotResults extends JPanel {
 
 	public int obliczPunkt(int punkt) {
 		if (punkt > 0) {
-			return (int) ((int) /*(panel.getSize().height- 30  - (punkt * skala)  +odstep + odstepGora);*/(panel.getSize().height - 37 - odstepDol) - (skala * punkt) + odstepGora);
+			return (int) ((int) (panel.getSize().height - 30 - odstepDol) - (skala * punkt));
 		}
 
-		return (int) ((int) /*(dlugoscY panel.getSize().height- 30 - (punkt * skala)  +odstep + odstepGora)*/(panel.getSize().height - 37 - odstepDol) + (skala * punkt) + odstepGora);
+		return (int) ((int) (panel.getSize().height - 30 - odstepDol) + (skala * punkt));
 	}
 
 	public int obliczPunkt2(int punkt) {
