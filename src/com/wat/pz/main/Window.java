@@ -179,8 +179,8 @@ public class Window extends JFrame {
 
 		});
 		if (database == null) {
-			 database = new ConnectToDB();
-			 database.removeAllRows();
+//			 database = new ConnectToDB();
+//			 database.removeAllRows();
 		}
 		startRead.addActionListener(new ActionListener() {
 

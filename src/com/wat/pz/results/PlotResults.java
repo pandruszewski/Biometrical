@@ -1,28 +1,40 @@
 package com.wat.pz.results;
 
+import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
+
+import com.wat.pz.plot.Plot;
 
 public class PlotResults extends JPanel {
 
@@ -45,8 +57,15 @@ public class PlotResults extends JPanel {
 	private double przeskalujWykresX = 1.0;
 	private double przeskalujWykresY = 1.0;
 	private SelectionSquare square = new SelectionSquare();
+	private boolean wasDragged = false;
 	private boolean pressed = false;
+	private int xPressed = 0;
+	private int xReleased = 0;
 	private JFrame frame;
+	private AWTEventListener awtListener;
+	private Results noweOkno = null;
+	private volatile int first = 0;
+	private volatile int last = 0;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -63,14 +82,18 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent o) {
-				if (o.getXOnScreen() < (frame.getSize().width - 22)
-						&& o.getYOnScreen() < (frame.getSize().height - 20)) {
-					square.setEndX(o.getX());
-					square.setEndY(o.getY());
-					repaint();
-					pressed = false;
-					// copyToClipboard();
-				}
+				/*
+				 * if (o.getXOnScreen() < (frame.getSize().width - 22) &&
+				 * o.getYOnScreen() < (frame.getSize().height - 20))
+				 */
+				square.setEndX(o.getX());
+				square.setEndY(o.getY());
+				repaint();
+
+				pressed = false;
+
+				// copyToClipboard();
+
 			}
 
 			@Override
@@ -83,7 +106,10 @@ public class PlotResults extends JPanel {
 				square.setStartY(o.getY());
 				square.setStartXOnScreen(o.getXOnScreen());
 				square.setStartYOnScreen(o.getYOnScreen());
+				wasDragged = false;
+				xPressed = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 				repaint();
+
 			}
 
 			@Override
@@ -100,7 +126,6 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -109,20 +134,76 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if (pressed && e.getXOnScreen() < (frame.getSize().width - 22)
-						&& e.getYOnScreen() < (frame.getSize().height - 20)) {
-					square.setEndX(e.getX());
+				wasDragged = true;
 
-					square.setEndY(e.getY());
-					repaint();
+				/*
+				 * if (pressed && e.getXOnScreen() < (frame.getSize().width -
+				 * 22) && e.getYOnScreen() < (frame.getSize().height - 20))
+				 */
 
+				square.setEndX(e.getX());
+				square.setEndY(e.getY());
+
+				xReleased = (int) ((e.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+
+				// System.out.println(e.getX()+"|"+e.getY());
+
+				System.out.println("Przed : " + xPressed + "|" + xReleased);
+				/*
+				 * if (xPressed > xReleased) { int tmp = xPressed; xPressed =
+				 * xReleased; xReleased = tmp;
+				 * 
+				 * }
+				 */
+
+				System.out.println("Po : " + xPressed + "|" + xReleased);
+
+				if (xPressed < xReleased) {
+
+					first = 0;
+					while ((data.points.get(first) != null)
+							&& (first < data.points.size())
+							&& (xPressed > data.points.get(first).getX())) {
+						first++;
+
+					}
+					last = first;
+					while ((data.points.get(last) != null)
+							&& (last < data.points.size())
+							&& (xReleased > data.points.get(last).getX())) {
+						last++;
+
+					}
+
+				} else {
+
+					first = 0;
+					while ((data.points.get(first) != null)
+							&& (first < data.points.size())
+							&& (xReleased > data.points.get(first).getX())) {
+						first++;
+					}
+					last = first;
+					while ((data.points.get(last) != null)
+							&& (last < data.points.size())
+							&& (xPressed > data.points.get(last).getX())) {
+						last++;
+
+					}
 				}
+
+				System.out.println(first + " asdf " + last);
+
+				setToolTipText("<html>Zaznaczy³eœ" + "<br>" + (last - first)
+						+ " punktów " + "</html>");
+
+				repaint();
 
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent o) {
-				// System.out.println(o.getX() + "  " + o.getY());
+				// System.out.println("dupa2");
 				int wspX = (int) (((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
 				// System.out.println(wspX);
 
@@ -180,7 +261,7 @@ public class PlotResults extends JPanel {
 						{
 
 							// System.out.print("jest git");
-							plot.setToolTipText("<html>Wspolrzedna X: "
+							setToolTipText("<html>Wspolrzedna X: "
 									+ (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
 									+ "<br>Wspolrzedna Y: " + ilepowinnobyc
 									+ "<br>Pomiar urzadzenie nr: "
@@ -204,8 +285,8 @@ public class PlotResults extends JPanel {
 								+ "<br>Pomiar urzadzenie nr: " + p.getIndeks()
 								+ "</html>");
 
-					} else {
-						plot.setToolTipText(null);
+					} else if (!wasDragged) {
+						setToolTipText(null);
 					}
 
 					p = null;
@@ -304,39 +385,39 @@ public class PlotResults extends JPanel {
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
 		int mojOdstepGora = (wysokoscOkna) / odstep;
 		odstepGora = ((wysokoscOkna) - (mojOdstepGora * odstep));
-		if(odstepGora<= 9) odstepGora += odstep;
+		if (odstepGora <= 9)
+			odstepGora += odstep;
 		pomoc = skala;
-		skala = skala / (((wysokoscOkna))- odstepDol - odstepGora);
+		skala = skala / (((wysokoscOkna)) - odstepDol - odstepGora);
 
-		
-		
-		
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
 		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
 											// pionowej
 
-		/*for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
+		/*
+		 * for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
+		 * 
+		 * valueOnLeft += odstep; g.drawLine(40, a, this.getSize().width, a);
+		 * g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a +
+		 * (odstep / 3));
+		 * 
+		 * minA = a; // dodal BOlec do rysowania podzialki pionowej
+		 * 
+		 * }
+		 */
 
-			valueOnLeft += odstep;
+		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
+
+			/*
+			 * valueOnLeft += odstep; g.drawLine(40, a, this.getSize().width,
+			 * a); g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0,
+			 * a + (odstep / 3));
+			 */
 			g.drawLine(40, a, this.getSize().width, a);
+
 			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
-					+ (odstep / 3));
-
-			minA = a; // dodal BOlec do rysowania podzialki pionowej
-
-		}*/
-		
-		for (int a =panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
-
-			/*valueOnLeft += odstep;
-			g.drawLine(40, a, this.getSize().width, a);
-			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
-					+ (odstep / 3));*/
-			g.drawLine(40, a, this.getSize().width, a);
-
-			g.drawString(String.valueOf((int)(valueOnLeft *skala)), 0, a
 					+ (odstep / 3));
 			valueOnLeft += odstep;
 			odstepGora = a;
@@ -345,24 +426,24 @@ public class PlotResults extends JPanel {
 
 		}
 
-
-		int maxA = dlugoscY + 10 + odstep;
+		int maxA = panel.getSize().height - 30 - odstepDol;
 		valueOnLeft = 0;
-		/*for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
-
-			valueOnLeft -= odstep;
-
-			g.drawLine(40, a, this.getSize().width, a);
-			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
-					+ (odstep / 3));
-
-			maxA = a; // dodal BOlec do rysowania podzialki pionowej
-		}*/
+		/*
+		 * for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
+		 * 
+		 * valueOnLeft -= odstep;
+		 * 
+		 * g.drawLine(40, a, this.getSize().width, a);
+		 * g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a +
+		 * (odstep / 3));
+		 * 
+		 * maxA = a; // dodal BOlec do rysowania podzialki pionowej }
+		 */
 
 		int bolectmp = (int) Math.ceil(wysokosc * skala);
 
 		int roznicaWysY = 0;
-/*
+
 		// EDITED By BOLEC -- wyswietlanie podzialki pionowej
 
 		FontRenderContext frc = g.getFontRenderContext();
@@ -373,9 +454,10 @@ public class PlotResults extends JPanel {
 			roznicaWysY = 20;
 			if (i % 4 == 0) {
 
-				if (i > this.data.points.size())
+				if (i >= this.data.points.size()) {
 					i = 0;
-
+					System.out.println("poza zakres");
+				}
 				String str = String.valueOf(this.data.points.get(i).getX());
 				g.drawString(str,
 						b - ((fontWidth / str.length()) * (str.length() / 2)),
@@ -386,10 +468,9 @@ public class PlotResults extends JPanel {
 		}
 
 		// end edit by bolec
-*/
+
 		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
-		
-		
+
 		g.setColor(Color.yellow);
 		Point o1 = data.points.get(0);
 		Point o2;
@@ -415,7 +496,7 @@ public class PlotResults extends JPanel {
 	}
 
 	public int obliczPunkt2(int punkt) {
-		return (int) ((dlugoscY + odstepGora - punkt) / skala);
+		return (int) ((panel.getSize().height - 30 - odstepDol - punkt) / skala);
 	}
 
 	public void paintInfoDialog(Graphics g) {
@@ -434,6 +515,7 @@ public class PlotResults extends JPanel {
 	}
 
 	public int ilePowinno(int x, Point p1, Point p2) {
+
 		double a = 0;
 		int ile = 0;
 		if ((p1.getX()) - (p2.getX()) == 0) {
@@ -448,4 +530,48 @@ public class PlotResults extends JPanel {
 		// System.out.println(a+"|"+x+"|"+ile);
 		return ile;
 	}
+
+	public void zaznaczenie() {
+
+		if (last - first < 2)
+			return;
+
+		System.out.println("dsaasdasdsdfafsd" + first + "|" + last);
+
+		List<com.wat.pz.results.Point> tmpPoints = data.points.subList(first,
+				last);
+
+		Date dateNow = new Date();
+
+		SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat(
+				"yyyy-MM-dd  HH-mm-ss");
+
+		StringBuilder nowDate = new StringBuilder(
+				dateformatYYYYMMDD.format(dateNow));
+
+		FileWriter fw;
+		try {
+			fw = new FileWriter(nowDate.toString() + ".txt");
+			fw.write("\n");
+			for (com.wat.pz.results.Point i : tmpPoints) {
+
+				fw.write(String.valueOf(i.getX()-data.points.get(first).getX()+10));
+				fw.write("\n");
+				fw.write(String.valueOf(i.getY()));
+				fw.write("\n");
+				fw.write(String.valueOf(i.getIndeks()));
+				fw.write("\n");
+			}
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		noweOkno = new Results(nowDate.toString() + ".txt");
+		noweOkno.setVisible(true);
+		wasDragged = false;
+
+	}
+
 }

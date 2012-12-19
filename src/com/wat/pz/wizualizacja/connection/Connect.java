@@ -103,6 +103,7 @@ public class Connect extends Thread {
 
 				//String content = in.nextLine();
 				int content = in.nextInt();
+				System.out.println(content);
 				this.customCollection.addLast(/*Double.parseDouble(content)*/(double)content);
 				try {
 					bw.write(String.valueOf(content));
@@ -112,8 +113,8 @@ public class Connect extends Thread {
 					e.printStackTrace();
 				}
 				wspolrzednaX = wspolrzednaX + odstepPunktow;
-				database.addData(String.valueOf(wspolrzednaX), String.valueOf(content),
-						String.valueOf(indexPlot));
+//				database.addData(String.valueOf(wspolrzednaX), String.valueOf(content),
+//						String.valueOf(indexPlot));
 			}
 			try {
 				System.out.println("zakmnieto");

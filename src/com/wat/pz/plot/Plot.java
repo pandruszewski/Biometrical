@@ -31,7 +31,7 @@ public class Plot extends JPanel {
 		return odstep;
 	}
 
-	// private CustomCollection customCollection;
+
 	public Plot(JPanel p, Graph graph, BufferStrategy bs) {
 		this.bs= bs;
 		this.p = p;
@@ -43,67 +43,61 @@ public class Plot extends JPanel {
 	}
 
 	@Override
-	public synchronized void paintComponent(Graphics gg) {
+	public void paintComponent(Graphics gg) {
 
 		super.paintComponent(gg);
 //
-//		Graphics2D g = (Graphics2D) gg;
-//		
-//		Color kolor = ((ColorSwatch) propertiesWidget.getColorButton()
-//				.getIcon()).getColor();
-//		int dlugosc = connect.getCustomCollection().size() - 1;
-//		int j = 0;
-//		int v = 0;
-//		this.setSize(p.getSize());
-//
-//		wysokosc = this.getSize().height - odstep;
-//
-//		g.setColor(kolor);
-//		int i = 45;
-//		i = this.getSize().width;
-//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-//		g.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-//		g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-//		g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-//		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-//		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-//		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-//		if (dlugosc > 1) {
-//			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
-//					.intValue());
-//		}
-//		g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
-//				BasicStroke.JOIN_ROUND));
-//		g.setColor(kolor);
+		Graphics2D g = (Graphics2D) gg;
+		Color kolor = ((ColorSwatch) propertiesWidget.getColorButton()
+				.getIcon()).getColor();
+		int dlugosc = connect.getCustomCollection().size() - 1;
+		int j = 0;
+		int v = 0;
+		this.setSize(p.getSize());
+
+		wysokosc = this.getSize().height - odstep;
+
+		g.setColor(kolor);
+		int i = 45;
+		i = this.getSize().width;
+
+		if (dlugosc >= 0) {
+			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
+					.intValue());
+		}
+		g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_ROUND));
+		g.setColor(kolor);
 //		 synchronized (this) {
-//		while (i > 45) {
-//
-//			if (dlugosc > 1 && connect.getCustomCollection() != null) {
-//
-//				skala = connect.getCustomCollection().getScaleNumber(
-//						(p.getSize().width - 40) / odstep);
-//				dlugoscY = graph.getScaleHeight();
-//
-//				graph.scaleGraph(skala / dlugoscY);
-//				skala = (double) dlugoscY / skala;
-//				v = obliczPunkt((connect.getCustomCollection().get(dlugosc)
-//						.intValue()));
-//				//g.drawLine        (i - odstep, v, i, j);
-//				g.draw(new Line2D.Double(i - odstep, v, i, j));
-//				dlugosc -= 1;
-//				j = v;
-//				
-//
-//			}
-//
-//			i -= odstep;
-//
-//		}
+		
+		while (i > 45) {
+
+			if (dlugosc >= 0 && connect.getCustomCollection() != null) {
+
+				skala = connect.getCustomCollection().getScaleNumber(
+						(p.getSize().width - 40) / odstep);
+				dlugoscY = graph.getScaleHeight();
+
+				graph.scaleGraph(skala / dlugoscY, /*connect.getCustomCollection().getMin().intValue()*/connect.getCustomCollection().getMin().intValue()/2);
+				skala = (double) dlugoscY / skala;
+				v = obliczPunkt((connect.getCustomCollection().get(dlugosc)
+						.intValue()-(connect.getCustomCollection().getMin().intValue()/2)));
+				//g.drawLine        (i - odstep, v, i, j);
+				g.draw(new Line2D.Double(i - odstep, v, i, j));
+				dlugosc -= 1;
+				j = v;
+				
+
+			}
+
+			i -= odstep;
+
+		}
 //		 }
-gg.drawImage(drawImage(), 0, 0, this);
+//gg.drawImage(drawImage(), 0, 0, this);
 	}
 	
-public BufferedImage drawImage(){
+	public BufferedImage drawImage(){
 		BufferedImage bi = new BufferedImage(this.getWidth(), this.getHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 	  Graphics2D g = bi.createGraphics();
@@ -119,13 +113,7 @@ public BufferedImage drawImage(){
 		g.setColor(kolor);
 		int i = 45;
 		i = this.getSize().width;
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-		g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
 		if (dlugosc >= 0) {
 			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
 					.intValue());
@@ -168,12 +156,12 @@ public BufferedImage drawImage(){
 	};
 
 	public int obliczPunkt(int punkt) {
-		if (punkt > 0) {
+	///	if (punkt > 0) {
 			//System.out.println(punkt + "   >>>  " + (int) ((this.getSize().height - graph.getOdstepDol()) - (skala * punkt)));
-			return (int) ((p.getSize().height - graph.getOdstepDol()) - (skala * punkt) /*+ graph.getOdstepGora()*/);
-		}
+			return (int) (((p.getSize().height - graph.getOdstepDol()) - (skala * punkt) /*+ graph.getOdstepGora()*/));
+		//}
 
-		return (int) ((this.getSize().height - graph.getOdstepDol()) + (skala * punkt) /*+ graph.getOdstepGora()*/);
+		//return (int) ((this.getSize().height - graph.getOdstepDol()) + (skala * punkt) /*+ graph.getOdstepGora()*/);
 	}
 
 	public Connect getConnect() {

@@ -36,22 +36,22 @@ public class Graph extends JPanel {
 		wysokosc = this.getSize().height - 20;
 
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
-		/* System.out.println(dlugoscY); */
+		 System.out.println(dlugoscY); 
 		g2.setColor(Color.gray);
-		/* g.drawLine(40, 10, 40, wysokosc); */
-		/*g2.drawString(String.valueOf((int) (valueOnLeft)), 0, dlugoscY + 10
-				+ (odstep / 3));*/
-		/*g2.drawLine(40, dlugoscY + 10, this.getSize().width, dlugoscY + 10);*/
+	
+	int minA =panel.getSize().height - odstepDol;
+	
 
 		for (int a = panel.getSize().height - odstepDol; a > 9; a -= odstep) {
 			
 			g2.drawLine(40, a, this.getSize().width, a);
 			
+			
 			////POCZATEK EDYCJI KEMAL DZIS KOMBINUJE NAD SKALA
 			
 			int wartosc = (int) (valueOnLeft *skala);
 			wartosc += min;
-			if(wartosc< 0) wartosc= -wartosc;
+//			if(wartosc< 0) wartosc= -wartosc;
 						
 			
 			
@@ -59,6 +59,15 @@ public class Graph extends JPanel {
 					+ (odstep / 3));
 			valueOnLeft += odstep;
 			odstepGora = a;
+			
+			minA=a;
+		}
+		
+																				//rysowanie podzialki pionowej				
+		for(int i = 40;i<panel.getSize().width;i+=10){
+			g2.drawLine(i,panel.getSize().height - odstepDol, i, minA);
+			
+			
 		}
 
 		valueOnLeft = 0;

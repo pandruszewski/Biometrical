@@ -70,8 +70,17 @@ public class Results extends JFrame {
 				}
 				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
 					plot.copyImage(2);
+					
 				}
-
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N) {
+					if (e.getID() == KeyEvent.KEY_PRESSED) {
+						plot.zaznaczenie();
+					}
+					
+					
+				}
+				
+			
 			}
 		};
 		Toolkit.getDefaultToolkit().addAWTEventListener(awt,

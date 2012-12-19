@@ -75,15 +75,32 @@ public class CustomCollection extends LinkedList<Double> {
 			min = Collections.min(lista);
 			//lista = null;
 			//System.gc();
-			// System.out.println("max= " + max + " min = " + min + " size = " +
-			// super.size());
+			 System.out.println("max= " + max + " min = " + min + " size = " +
+			 super.size());
 		}
-		if ((-min) > max) {
+		/*if ((-min) > max) {
 			return (-min);
+		}*/
+		
+		/*if( max- min > 2000) {
+			System.out.println("MAX");
+			return  min;
 		}
-		if( max- min > 2000) return /* max */max - min;
-		else if(max - min < 1000 ) return 20000;
-		return 1000;
+		else if(max - min < 1000 ){
+			//min = 0.0;
+			System.out.println("MIN");
+			
+			return max;
+		}*/
+		//min = 0.0;
+//		System.out.println("DUPA");
+		/*if(max - min > 500){
+			return 0.8*max;
+		}
+		else if(max - min <= 500) {
+			return max;
+		}*/
+		return max;
 	}
 
 	@Override
