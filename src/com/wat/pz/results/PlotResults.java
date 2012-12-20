@@ -66,6 +66,7 @@ public class PlotResults extends JPanel {
 	private Results noweOkno = null;
 	private volatile int first = 0;
 	private volatile int last = 0;
+	private Kuleczka kuleczka =null;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -205,14 +206,12 @@ public class PlotResults extends JPanel {
 			public void mouseMoved(MouseEvent o) {
 				// System.out.println("dupa2");
 				int wspX = (int) (((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
-				// System.out.println(wspX);
-
-				// System.out.println(wspX);
+	
+		
+				
 				if (wspX >= 0 && wspX < data.points.size()) {
 					Point p = data.points.get(wspX);
-					// System.out.println("x= " + p.getX() + " y= " + p.getY());
-					// paintInfoDialog(graphic);
-
+					
 					Point p2;
 					Point p1 = data.points.get(wspX);
 					if (wspX == 0) {
@@ -228,7 +227,27 @@ public class PlotResults extends JPanel {
 						p1 = p2;
 						p2 = pTmp;
 					}
-
+				
+					
+					System.out.println(p1.getX()+"|"+p2.getX());
+					int tmpX = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+					int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
+					if(kuleczka == null) kuleczka = new Kuleczka(o.getX(),obliczPunkt(ilePowinno(tmpX, p1, p2)));
+					else{
+					kuleczka.setX((int)(o.getX()));
+					kuleczka.setY((int)(obliczPunkt(ilePowinno(tmpX, p1, p2))*przeskalujWykresY));
+					
+					if(getToolTipText(null) != null){
+					
+					setToolTipText("<html>Wspolrzedna X: "
+							+ (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
+							+ "<br>Wspolrzedna Y: " + ilepowinnobyc2
+							+ "<br>Pomiar urzadzenie nr: "
+							+ p1.getIndeks() + "</html>");
+					}
+					repaint();
+					
+					}
 					// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
 					// + "P2  " + p2.getX() + "|" + p2.getY());
 					// System.out.println("obliczpunkt " +
@@ -268,6 +287,8 @@ public class PlotResults extends JPanel {
 									+ p1.getIndeks() + "</html>");
 						}
 					}
+					
+				
 
 					else if ((o.getY() / przeskalujWykresY) + 3 >= plot
 							.obliczPunkt(p.getY())
@@ -363,11 +384,12 @@ public class PlotResults extends JPanel {
 	protected void paintComponent(Graphics gg) {
 		super.paintComponent(gg);
 		Graphics2D g = (Graphics2D) gg;
-
+		
 		float alpha = 0.35f;
 		Color color = new Color(0, 0, 1, alpha);
 		g.setPaint(color);
 		square.paintSquare(g);
+		if(kuleczka!=null)kuleczka.paintKuleczka(g);
 
 		g.scale(przeskalujWykresX, przeskalujWykresY);
 		double pomoc = 0;
@@ -454,15 +476,12 @@ public class PlotResults extends JPanel {
 			roznicaWysY = 20;
 			if (i % 4 == 0) {
 
-				if (i >= this.data.points.size()) {
-					i = 0;
-					System.out.println("poza zakres");
-				}
+				 if(i < this.data.points.size()){
 				String str = String.valueOf(this.data.points.get(i).getX());
 				g.drawString(str,
 						b - ((fontWidth / str.length()) * (str.length() / 2)),
 						maxA + roznicaWysY);
-
+				}
 			}
 
 		}
@@ -516,19 +535,26 @@ public class PlotResults extends JPanel {
 
 	public int ilePowinno(int x, Point p1, Point p2) {
 
-		double a = 0;
+		
+		
+		System.out.println("punktyX "+p1.getX()+"|"+p2.getX());
+		
+		System.out.println("punktyY "+p1.getY()+"|"+p2.getY());
+		double a ;
 		int ile = 0;
 		if ((p1.getX()) - (p2.getX()) == 0) {
 			a = 0;
 		} else {
-			a = ((p1.getY() - p2.getY()) / ((p1.getX()) - (p2.getX())));
+			a = ((double)(p1.getY() - p2.getY()) / ((double)(p1.getX()) - (p2.getX())));
 		}
-		double b = p1.getY() - (p1.getX() * a);
-
+		double b = p1.getY() - ((p1.getX() * a));
+System.out.println("b= "+b +"a= " +a +"x= "+x);
 		ile = (int) Math.round(((a * x) + b));
-		// System.out.println(p1.getX()+"|"+p1.getY()+"|||"+p2.getX()+"|"+p2.getY());
-		// System.out.println(a+"|"+x+"|"+ile);
+	System.out.println((a * x) + b);
+		System.out.println("ile= "+ile);
 		return ile;
+		
+		
 	}
 
 	public void zaznaczenie() {
