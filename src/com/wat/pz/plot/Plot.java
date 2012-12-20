@@ -37,7 +37,7 @@ public class Plot extends JPanel {
 		this.p = p;
 		this.setSize(p.getSize());
 		this.graph = graph;
-		System.out.println(this.isDoubleBuffered());
+//		System.out.println(this.isDoubleBuffered());
 		this.setDoubleBuffered(true);
 		this.setIgnoreRepaint(true);
 	}
@@ -63,7 +63,7 @@ public class Plot extends JPanel {
 
 		if (dlugosc >= 0) {
 			j = obliczPunkt(connect.getCustomCollection().get(dlugosc)
-					.intValue());
+					.intValue()-(connect.getCustomCollection().getMin().intValue()/2));
 		}
 		g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
@@ -82,7 +82,7 @@ public class Plot extends JPanel {
 				skala = (double) dlugoscY / skala;
 				v = obliczPunkt((connect.getCustomCollection().get(dlugosc)
 						.intValue()-(connect.getCustomCollection().getMin().intValue()/2)));
-				//g.drawLine        (i - odstep, v, i, j);
+				//g.drawLine(i - odstep, v, i, j);
 				g.draw(new Line2D.Double(i - odstep, v, i, j));
 				dlugosc -= 1;
 				j = v;
@@ -121,7 +121,7 @@ public class Plot extends JPanel {
 		g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
 		g.setColor(kolor);
-		 synchronized (this) {
+//		- synchronized (this) {
 		while (i > 45) {
 
 			if (dlugosc >= 0 && connect.getCustomCollection() != null) {
@@ -145,7 +145,7 @@ public class Plot extends JPanel {
 			i -= odstep;
 
 		}
-		 }
+//		 }
 		 
 	return bi;
 }
