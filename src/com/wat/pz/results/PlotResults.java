@@ -63,6 +63,8 @@ public class PlotResults extends JPanel {
 	private volatile int last = 0;
 	private Kuleczka kuleczka = null;
 	private boolean milimeterMode = true;
+	private int minA;
+	private int maxA;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -84,7 +86,7 @@ public class PlotResults extends JPanel {
 				 * o.getYOnScreen() < (frame.getSize().height - 20))
 				 */
 				square.setEndX(o.getX());
-				square.setEndY(o.getY());
+				square.setEndY(maxA);
 				repaint();
 
 				pressed = false;
@@ -100,7 +102,7 @@ public class PlotResults extends JPanel {
 				square.setEndY(null);
 				pressed = true;
 				square.setStartX(o.getX());
-				square.setStartY(o.getY());
+				square.setStartY(minA);
 				square.setStartXOnScreen(o.getXOnScreen());
 				square.setStartYOnScreen(o.getYOnScreen());
 				wasDragged = false;
@@ -139,7 +141,7 @@ public class PlotResults extends JPanel {
 				 */
 
 				square.setEndX(e.getX());
-				square.setEndY(e.getY());
+				square.setEndY(maxA);
 
 				xReleased = (int) ((e.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 
@@ -419,8 +421,8 @@ public class PlotResults extends JPanel {
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
-		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
-											// pionowej
+		minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
+										// pionowej
 
 		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
 
@@ -432,11 +434,11 @@ public class PlotResults extends JPanel {
 			minA = a; // dodal BOlec do rysowania podzialki pionowej
 
 		}
-		for (int a = panel.getSize().height - 30 - odstepDol; a >12; a -= odstepMilimeterX) {
+		for (int a = panel.getSize().height - 30 - odstepDol; a >= minA; a -= odstepMilimeterX) {
 			g.drawLine(40, a, this.getSize().width, a);
 		}
 
-		int maxA = panel.getSize().height - 30 - odstepDol;
+		maxA = panel.getSize().height - 30 - odstepDol;
 		valueOnLeft = 0;
 
 		int bolectmp = (int) Math.ceil(wysokosc * skala);

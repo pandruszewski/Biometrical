@@ -178,10 +178,7 @@ public class Window extends JFrame {
 			}
 
 		});
-		if (database == null) {
-//			 database = new ConnectToDB();
-//			 database.removeAllRows();
-		}
+
 		startRead.addActionListener(new ActionListener() {
 
 			@Override
@@ -242,7 +239,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg) {
-		//	if (database.countData() > 0 && !isSumulating()) {
+			if ( !isSumulating() && wasSimulated()) {
 					JFileChooser fileChooser = new JFileChooser();
 					FileFilter filter = new FileNameExtensionFilter(
 							"TXT Files", "txt");
@@ -258,49 +255,16 @@ public class Window extends JFrame {
 
 						Component component = (Component) arg.getSource();
 
-						// JOptionPane.showMessageDialog(null,
-						// database.countData());
-						progressMonitor = new ProgressMonitor(component,
-								"Zapis do pliku", null, 0, database.countData());
-						progressMonitor.setMinimum(0);
-						progressMonitor.setMaximum(database.countData());
-						int progress = 0;
-						progressMonitor.setMillisToDecideToPopup(0);// pytanie
-																	// czy
-																	// to
-																	// dobrze bo
-																	// zalecenia
-																	// mowia o
-																	// 2
-																	// sekundach
-																	// dla
-																	// swinga
-						BufferedWriter bf = null;
-						try {
-							bf = new BufferedWriter(new FileWriter(new File(
-									filename)));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						
+						File file = new File("pomiar.txt");
+						if(file.exists()){
+							file.renameTo(new File(filename));
 						}
 
-					/*	for (Plot p : plotList) {
-							progress = database.WriteData(p.getConnect()
-									.getIndexPlot(), progress, progressMonitor,
-									bf);
-*/						//}
-						try {
-							bf.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						database.removeAllRows();
 					}
 				}
 
-			//}
+			}
 		});
 
 		resultWindow.addActionListener(new ActionListener() {
@@ -361,6 +325,18 @@ public class Window extends JFrame {
 			System.out.println(pl.getConnect().isInterrupted() + " "
 					+ pl.getConnect().isAlive());
 			if (!pl.getConnect().isInterrupted() && pl.getConnect().isAlive()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	public boolean wasSimulated(){
+		for (Plot pl : plotList) {
+			System.out.println(pl.getConnect().isInterrupted() + " "
+					+ pl.getConnect().isAlive());
+			if (pl.isSimulated()) {
 				return true;
 			}
 		}

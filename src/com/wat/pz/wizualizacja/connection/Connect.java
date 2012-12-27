@@ -34,13 +34,13 @@ public class Connect extends Thread {
 	private long wspolrzednaX = 0;
 	private ConnectToDB database;
 	private BufferedWriter bw = null;
-	long connectTime=System.currentTimeMillis();
+	long connectTime = System.currentTimeMillis();
 
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
-		this.plot=p;
+		this.plot = p;
 		odstepPunktow = p.getOdstep();
 		this.database = database;
-		customCollection = new CustomCollection(new CustomListener(p,p));
+		customCollection = new CustomCollection(new CustomListener(p, p));
 		this.indexPlot = indexPlot;
 		Properties prop = new Properties();
 		InputStream in;
@@ -68,8 +68,6 @@ public class Connect extends Thread {
 		connectDevice();
 
 	}
-	
-	
 
 	private void connectDevice() {
 		if (socket == null) {
@@ -79,17 +77,12 @@ public class Connect extends Thread {
 				try {
 					socket = new Socket(addressIP, port);
 					in = new Scanner(socket.getInputStream());
+					plot.setSimulated(true);
 				} catch (IOException e) {
 
 					JOptionPane.showMessageDialog(null,
 							"Host o tym adresie IP nie zostal odnaleziony",
 							"Blad", JOptionPane.ERROR_MESSAGE);
-
-					/*
-					 * JOptionPane.showMessageDialog(null,
-					 * "Host o tym adresie IP nie zostal odnaleziony", "Blad",
-					 * JOptionPane.ERROR_MESSAGE);
-					 */
 
 				}
 
@@ -100,28 +93,34 @@ public class Connect extends Thread {
 
 	public synchronized void run() {
 		long a, b;
-		connectTime=System.currentTimeMillis();
+		connectTime = System.currentTimeMillis();
 		if (in != null) {
 			while (in.hasNext() && !socket.isClosed()) {
 
-				//String content = in.nextLine();
+				// String content = in.nextLine();
 				int content = in.nextInt();
-		//		System.out.println(content);
-				
-				
-				Measurement m =new Measurement(content,(System.currentTimeMillis()-connectTime));
-				
+				// System.out.println(content);
+
+				Measurement m = new Measurement(content,
+						(System.currentTimeMillis() - connectTime));
+
 				this.customCollection.addLast(m);
+				wspolrzednaX = wspolrzednaX + odstepPunktow;
 				try {
+					bw.newLine();
+					bw.write(String.valueOf(wspolrzednaX));
+					bw.newLine();
 					bw.write(String.valueOf(content));
 					bw.newLine();
+					bw.write(String.valueOf(indexPlot));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				wspolrzednaX = wspolrzednaX + odstepPunktow;
-//				database.addData(String.valueOf(wspolrzednaX), String.valueOf(content),
-//						String.valueOf(indexPlot));
+				
+				// database.addData(String.valueOf(wspolrzednaX),
+				// String.valueOf(content),
+				// String.valueOf(indexPlot));
 			}
 			try {
 				System.out.println("zakmnieto");

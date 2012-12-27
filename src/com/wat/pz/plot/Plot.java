@@ -27,6 +27,16 @@ public class Plot extends JPanel {
 	private double skala = 1.0;
 	private int odstep = 10;
 	private int iteratorPodzialkiPionowej = 0;
+	private boolean simulated = false;
+
+
+	public boolean isSimulated() {
+		return simulated;
+	}
+
+	public void setSimulated(boolean simulated) {
+		this.simulated = simulated;
+	}
 
 	private PropertiesWidget propertiesWidget;
 	private BufferStrategy bs;
@@ -88,10 +98,7 @@ public class Plot extends JPanel {
 						(p.getSize().width - 40) / odstep);
 				dlugoscY = graph.getScaleHeight();
 
-				graph.scaleGraph(skala / dlugoscY, /*
-													 * connect.getCustomCollection
-													 * ().getMin().intValue()
-													 */connect
+				graph.scaleGraph(skala / dlugoscY, connect
 						.getCustomCollection().getMin().intValue() / 2);
 				skala = (double) dlugoscY / skala;
 				current = connect.getCustomCollection().get(dlugosc);
@@ -128,9 +135,9 @@ public class Plot extends JPanel {
 													// odpowiednim
 													// miejscu
 
-								System.out.println("ELSE: " + "F: "
-										+ current.getTime() + " S: "
-										+ previous.getTime());
+//								System.out.println("ELSE: " + "F: "
+//										+ current.getTime() + " S: "
+//										+ previous.getTime());
 
 							}
 						} else {
@@ -141,11 +148,6 @@ public class Plot extends JPanel {
 						}
 					}
 
-					/*
-					 * rysujPodzialke(g, i,
-					 * connect.getCustomCollection().get(dlugosc));
-					 * g.setColor(kolor);
-					 */
 				}
 
 				dlugosc -= 1;
@@ -249,9 +251,8 @@ public class Plot extends JPanel {
 		g.drawLine(i, graph.getSize().height - graph.getOdstepDol(), i,
 				graph.getMinA());
 
-		//double d = (Math.round(((double) m.getTime() / 1000) * 100)) / 100;
-long l = Math.round((double)m.getTime()/1000);
-
+		// double d = (Math.round(((double) m.getTime() / 1000) * 100)) / 100;
+		long l = Math.round((double) m.getTime() / 1000);
 
 		g.drawString(String.valueOf(l), i,
 				graph.getSize().height - graph.getOdstepDol() + 20);
