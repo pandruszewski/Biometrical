@@ -79,6 +79,13 @@ public class Results extends JFrame {
 					
 					
 				}
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
+					if (e.getID() == KeyEvent.KEY_PRESSED) {
+						plot.setMilimeterMode(!plot.isMilimeterMode());
+					}
+					
+					
+				}
 				
 			
 			}

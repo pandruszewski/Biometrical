@@ -1,28 +1,23 @@
 package com.wat.pz.results;
 
-import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.AWTEventListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,9 +28,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import javax.swing.plaf.ToolTipUI;
-
-import com.wat.pz.plot.Plot;
 
 public class PlotResults extends JPanel {
 
@@ -47,6 +39,8 @@ public class PlotResults extends JPanel {
 	private int dlugoscY = 0;
 	private int dlugoscX = 0; // dodal Bolec do rysowania podzialki pionowej
 	private int odstep = 20;
+	private int odstepMilimeterX = 4;
+	private int odstepMilimeterY = 4;
 	private int odstepX = 10;
 	private int odstepDol = 20;
 	private double skala = 1.0;
@@ -68,6 +62,7 @@ public class PlotResults extends JPanel {
 	private volatile int first = 0;
 	private volatile int last = 0;
 	private Kuleczka kuleczka = null;
+	private boolean milimeterMode = true;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -235,7 +230,7 @@ public class PlotResults extends JPanel {
 								obliczPunkt(ilePowinno(tmpX, p1, p2)));
 					} else if (((o.getX() / przeskalujWykresX)
 							- (odstepOdPoczatkuWykresu) >= 10)) {
-						// 10 to zmienna kosmiczna oznaczajaca  wart x
+						// 10 to zmienna kosmiczna oznaczajaca wart x
 						// pierwszego punktu pomiarowego :)
 
 						kuleczka.setX((int) (o.getX()));
@@ -381,6 +376,116 @@ public class PlotResults extends JPanel {
 	@Override
 	protected void paintComponent(Graphics gg) {
 		super.paintComponent(gg);
+
+		if (!isMilimeterMode()) {
+			paintNormally(gg);
+		} else {
+			paintMilimeter(gg);
+		}
+
+	}
+
+	private void paintMilimeter(Graphics gg) {
+		Graphics2D g = (Graphics2D) gg;
+
+		float alpha = 0.35f;
+		Color color = new Color(0, 0, 1, alpha);
+		g.setPaint(color);
+		square.paintSquare(g);
+		if (kuleczka != null)
+			kuleczka.paintKuleczka(g);
+
+		g.scale(przeskalujWykresX, przeskalujWykresY);
+		double pomoc = 0;
+		skala = data.getMaxY();
+		int wysokoscOkna = panel.getSize().height - 30;
+		int szerokoscOkna = this.getSize().width; // dodal BOlec do rysowania
+													// podzialki pionowej
+		setPreferredSize(new Dimension(
+				(int) (przeskalujWykresX * (data.getMaxX() + 30)),
+				(int) (przeskalujWykresY * (panel.getSize().height - 30))));
+
+		wysokosc = wysokoscOkna - 20;
+		szerokosc = szerokoscOkna; // dodal Bolec
+
+		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
+		int mojOdstepGora = (wysokoscOkna) / odstep;
+		odstepGora = ((wysokoscOkna) - (mojOdstepGora * odstep));
+		if (odstepGora <= 9)
+			odstepGora += odstep;
+		pomoc = skala;
+		skala = skala / (((wysokoscOkna)) - odstepDol - odstepGora);
+
+		int valueOnLeft = 0;
+
+		g.setColor(Color.gray);
+		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
+											// pionowej
+
+		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
+
+			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
+					+ (odstep / 3));
+			valueOnLeft += odstep;
+			odstepGora = a;
+
+			minA = a; // dodal BOlec do rysowania podzialki pionowej
+
+		}
+		for (int a = panel.getSize().height - 30 - odstepDol; a >12; a -= odstepMilimeterX) {
+			g.drawLine(40, a, this.getSize().width, a);
+		}
+
+		int maxA = panel.getSize().height - 30 - odstepDol;
+		valueOnLeft = 0;
+
+		int bolectmp = (int) Math.ceil(wysokosc * skala);
+
+		int roznicaWysY = 0;
+
+		// EDITED By BOLEC -- wyswietlanie podzialki pionowej
+
+		FontRenderContext frc = g.getFontRenderContext();
+		int fontWidth = (int) g.getFont().getMaxCharBounds(frc).getWidth();
+
+		for (int b = 40, i = 0; b < szerokosc; b += odstepX, i++) {
+
+			roznicaWysY = 20;
+			if (i % 4 == 0) {
+
+				if (i < this.data.points.size()) {
+					String str = String.valueOf(this.data.points.get(i).getX());
+					g.drawString(
+							str,
+							b
+									- ((fontWidth / str.length()) * (str
+											.length() / 2)), maxA + roznicaWysY);
+				}
+			}
+
+		}
+		for (int b = 40; b <= szerokosc; b += odstepMilimeterY) {
+			g.drawLine(b, minA, b, maxA);
+		}
+
+		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
+
+		g.setColor(Color.yellow);
+		Point o1 = data.points.get(0);
+		Point o2;
+		odstepOdPoczatkuWykresu = 40 - o1.getX();
+		odstepPunkt = o1.getX();
+		for (int i = 1; i < data.points.size(); i++) {
+			o2 = data.points.get(i);
+
+			g.drawLine(o1.getX() + odstepOdPoczatkuWykresu,
+					obliczPunkt(o1.getY()),
+					o2.getX() + odstepOdPoczatkuWykresu, obliczPunkt(o2.getY()));
+			o1 = o2;
+		}
+	}
+
+	private void paintNormally(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
 
 		float alpha = 0.35f;
@@ -504,7 +609,6 @@ public class PlotResults extends JPanel {
 					o2.getX() + odstepOdPoczatkuWykresu, obliczPunkt(o2.getY()));
 			o1 = o2;
 		}
-
 	}
 
 	public int obliczPunkt(int punkt) {
@@ -598,6 +702,15 @@ public class PlotResults extends JPanel {
 		noweOkno.setVisible(true);
 		wasDragged = false;
 
+	}
+
+	public boolean isMilimeterMode() {
+		return milimeterMode;
+	}
+
+	public void setMilimeterMode(boolean milimeterMode) {
+		this.milimeterMode = milimeterMode;
+		repaint();
 	}
 
 }
