@@ -242,7 +242,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg) {
-				if (database.countData() > 0 && !isSumulating()) {
+		//	if (database.countData() > 0 && !isSumulating()) {
 					JFileChooser fileChooser = new JFileChooser();
 					FileFilter filter = new FileNameExtensionFilter(
 							"TXT Files", "txt");
@@ -284,11 +284,11 @@ public class Window extends JFrame {
 							e.printStackTrace();
 						}
 
-						for (Plot p : plotList) {
+					/*	for (Plot p : plotList) {
 							progress = database.WriteData(p.getConnect()
 									.getIndexPlot(), progress, progressMonitor,
 									bf);
-						}
+*/						//}
 						try {
 							bf.close();
 						} catch (IOException e) {
@@ -300,7 +300,7 @@ public class Window extends JFrame {
 					}
 				}
 
-			}
+			//}
 		});
 
 		resultWindow.addActionListener(new ActionListener() {

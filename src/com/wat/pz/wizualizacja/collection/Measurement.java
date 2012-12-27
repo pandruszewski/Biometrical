@@ -2,17 +2,18 @@ package com.wat.pz.wizualizacja.collection;
 
 import java.security.Timestamp;
 
-public class Measurement {
+public class Measurement implements Comparable<Measurement> {
 	
-	private int value;
+	private double  value;
 	private long time;
 	
 	
 	
-	public Measurement(int v){
+	public Measurement(int v,long t){
 		
 		this.value =v;
-		this.time=System.currentTimeMillis();
+		this.time =t;
+		
 	}
 	
 	
@@ -28,8 +29,16 @@ public class Measurement {
 		return time;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
+	}
+
+
+	@Override
+	public int compareTo(Measurement o) {
+		
+		
+		return (int) (this.value-o.value);
 	}
 	
 	

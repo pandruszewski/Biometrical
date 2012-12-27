@@ -31,7 +31,7 @@ public class Kuleczka {
 	}
 	public void paintKuleczka(Graphics2D g){
 		g.setColor(color);
-		g.fillOval(x-2, y-2, 10, 10);
+		g.fillOval(x-3, y-3, 10, 10);
 	}
 	public void setColor(Color c){
 		this.color=c;
