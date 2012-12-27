@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import com.wat.pz.plot.Plot;
 import com.wat.pz.wizualizacja.collection.CustomCollection;
 import com.wat.pz.wizualizacja.collection.CustomListener;
+import com.wat.pz.wizualizacja.collection.Measurement;
 
 public class Connect extends Thread {
 
@@ -33,6 +34,7 @@ public class Connect extends Thread {
 	private long wspolrzednaX = 0;
 	private ConnectToDB database;
 	private BufferedWriter bw = null;
+	long connectTime=System.currentTimeMillis();
 
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
 		this.plot=p;
@@ -98,13 +100,18 @@ public class Connect extends Thread {
 
 	public synchronized void run() {
 		long a, b;
+		connectTime=System.currentTimeMillis();
 		if (in != null) {
 			while (in.hasNext() && !socket.isClosed()) {
 
 				//String content = in.nextLine();
 				int content = in.nextInt();
-				System.out.println(content);
-				this.customCollection.addLast(/*Double.parseDouble(content)*/(double)content);
+		//		System.out.println(content);
+				
+				
+				Measurement m =new Measurement(content,(System.currentTimeMillis()-connectTime));
+				
+				this.customCollection.addLast(m);
 				try {
 					bw.write(String.valueOf(content));
 					bw.newLine();

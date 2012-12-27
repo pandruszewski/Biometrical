@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ObjectInputStream.GetField;
 
 import javax.swing.JPanel;
 
@@ -16,6 +17,10 @@ public class Graph extends JPanel {
 	private int odstepGora = 0;
 	private int odstepDol = 20;
 	private int min = 0;
+	private int minA;
+
+	
+	
 
 	public Graph(JPanel panel) {
 		this.panel = panel;
@@ -36,10 +41,10 @@ public class Graph extends JPanel {
 		wysokosc = this.getSize().height - 20;
 
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
-		 System.out.println(dlugoscY); 
+	//	 System.out.println(dlugoscY); 
 		g2.setColor(Color.gray);
 	
-	int minA =panel.getSize().height - odstepDol;
+ minA =panel.getSize().height - odstepDol;
 	
 
 		for (int a = panel.getSize().height - odstepDol; a > 9; a -= odstep) {
@@ -64,11 +69,11 @@ public class Graph extends JPanel {
 		}
 		
 																				//rysowanie podzialki pionowej				
-		for(int i = 40;i<panel.getSize().width;i+=10){
+	/*	for(int i = 40;i<panel.getSize().width;i+=10){
 			g2.drawLine(i,panel.getSize().height - odstepDol, i, minA);
 			
 			
-		}
+		}*/
 
 		valueOnLeft = 0;
 		/*for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
@@ -89,6 +94,10 @@ public class Graph extends JPanel {
 		 */
 
 		return bi;
+	}
+
+	public int getMinA() {
+		return minA;
 	}
 
 	public void scaleGraph(double skala, int min) {
