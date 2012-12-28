@@ -70,21 +70,18 @@ public class Window extends JFrame {
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.getLayeredPane().setSize(this.getSize().height,
 				this.getSize().width);
-		/*layer = this.getLayeredPane();*/
+		/* layer = this.getLayeredPane(); */
 		layer = new JLayeredPane();
-		//layer.setLayout(new BorderLayout());
+		// layer.setLayout(new BorderLayout());
 		p.setLayout(new BorderLayout());
 		p.add(layer);
-		
-		
-		
-		
+
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 
 		// createBufferStrategy(2);
 		bs = getBufferStrategy();
 		this.getContentPane().add(p);
-		
+
 		panelDolny.add(openProperties);
 		panelDolny.add(startRead);
 		panelDolny.add(stopMeasure);
@@ -93,76 +90,64 @@ public class Window extends JFrame {
 		panelDolny.add(exitButton);
 		this.getContentPane().add(panelDolny);
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-	    Image image = toolkit.getImage("ikonka.png");
-	    
-	    this.setIconImage(image);
-	    
+		Image image = toolkit.getImage("ikonka.png");
+
+		this.setIconImage(image);
+
 		if (!SystemTray.isSupported()) {
-		      System.out.println("SystemTray is not supported");
-		      return;
-		    }
+			System.out.println("SystemTray is not supported");
+			return;
+		}
 
-		    SystemTray tray = SystemTray.getSystemTray();
-		    
+		SystemTray tray = SystemTray.getSystemTray();
 
-		    PopupMenu menu = new PopupMenu();
+		PopupMenu menu = new PopupMenu();
 
-		    MenuItem messageItem = new MenuItem("Show Window");
-		    messageItem.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent e) {
-		        //JOptionPane.showMessageDialog(null, "www.java2s.com");
-		    	  setVisible(true);
-		      }
-		    });
-		    menu.add(messageItem);
-
-		    MenuItem closeItem = new MenuItem("Close");
-		    closeItem.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent e) {
-		        System.exit(0);
-		      }
-		    });
-		    menu.add(closeItem);
-		    TrayIcon icon = new TrayIcon(image, "Muscle Explorer", menu);
-		    icon.setImageAutoSize(true);
-
-		    try {
-				tray.add(icon);
-			} catch (AWTException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+		MenuItem messageItem = new MenuItem("Show Window");
+		messageItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// JOptionPane.showMessageDialog(null, "www.java2s.com");
+				setVisible(true);
 			}
-		
-		
-		
-		
+		});
+		menu.add(messageItem);
+
+		MenuItem closeItem = new MenuItem("Close");
+		closeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		menu.add(closeItem);
+		TrayIcon icon = new TrayIcon(image, "Muscle Explorer", menu);
+		icon.setImageAutoSize(true);
+
+		try {
+			tray.add(icon);
+		} catch (AWTException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
 		this.pack();
 		this.setSize(500, 500);
 		// this.setLocationRelativeTo(null);
 
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
-		/*try {
-			//System.out.println(Window.class.getResource("splash.jpg"));
-			JSplash jsplash = new JSplash(
-					Window.class.getResource("splash.jpg"), true, true, false,
-					null, null, Color.red, Color.black);
-			jsplash.splashOn();
-			jsplash.setProgress(20, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(40, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(60, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(80, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(100, "Loading");
-			Thread.sleep(500);
-			jsplash.splashOff();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
+		/*
+		 * try { //System.out.println(Window.class.getResource("splash.jpg"));
+		 * JSplash jsplash = new JSplash(
+		 * Window.class.getResource("splash.jpg"), true, true, false, null,
+		 * null, Color.red, Color.black); jsplash.splashOn();
+		 * jsplash.setProgress(20, "Loading"); Thread.sleep(500);
+		 * jsplash.setProgress(40, "Loading"); Thread.sleep(500);
+		 * jsplash.setProgress(60, "Loading"); Thread.sleep(500);
+		 * jsplash.setProgress(80, "Loading"); Thread.sleep(500);
+		 * jsplash.setProgress(100, "Loading"); Thread.sleep(500);
+		 * jsplash.splashOff(); } catch (InterruptedException e1) { // TODO
+		 * Auto-generated catch block e1.printStackTrace(); }
+		 */
 
 		database = null;
 		layer.add(graph, new Integer(0));
@@ -225,8 +210,8 @@ public class Window extends JFrame {
 				Connect con = null;
 				for (Plot p : plotList) {
 					con = p.getConnect();
-					//con.interrupt();
-					//con.suspend();
+					// con.interrupt();
+					// con.suspend();
 					con.closeSocket();
 
 				}
@@ -239,7 +224,7 @@ public class Window extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg) {
-			if ( !isSumulating() && wasSimulated()) {
+				if (!isSumulating() && wasSimulated()) {
 					JFileChooser fileChooser = new JFileChooser();
 					FileFilter filter = new FileNameExtensionFilter(
 							"TXT Files", "txt");
@@ -255,9 +240,8 @@ public class Window extends JFrame {
 
 						Component component = (Component) arg.getSource();
 
-						
 						File file = new File("pomiar.txt");
-						if(file.exists()){
+						if (file.exists()) {
 							file.renameTo(new File(filename));
 						}
 
@@ -331,8 +315,7 @@ public class Window extends JFrame {
 		return false;
 	}
 
-
-	public boolean wasSimulated(){
+	public boolean wasSimulated() {
 		for (Plot pl : plotList) {
 			System.out.println(pl.getConnect().isInterrupted() + " "
 					+ pl.getConnect().isAlive());

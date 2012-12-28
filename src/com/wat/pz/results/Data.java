@@ -47,7 +47,7 @@ public class Data {
 			String s = null;
 			while((s = br.readLine() )!= null){
 				//System.out.println(">>" + s);
-				points.add(new Point(Integer.parseInt(s), Integer.parseInt(br.readLine()), Integer.parseInt(br.readLine())));
+				points.add(new Point(Integer.parseInt(s), Integer.parseInt(br.readLine()), Integer.parseInt(br.readLine()),Long.parseLong(br.readLine()),br.readLine()));
 				
 			}
 		} catch (IOException e) {

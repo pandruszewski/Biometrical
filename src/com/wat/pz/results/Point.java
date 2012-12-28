@@ -1,14 +1,28 @@
 package com.wat.pz.results;
 
+import java.util.Date;
+
 public class Point implements Comparable<Point>{
 	private int x;
 	private int y;
 	private int indeks;
+	private long time;
+	private String date ;
 
-	public Point(int x, int y, int indeks) {
+	public long getTime() {
+		return time;
+	}
+
+	public Point(int x, int y, int indeks,long time,String d) {
 		this.x = x;
 		this.y = y;
 		this.indeks = indeks;
+		this.time =time;
+		this.date=d;
+	}
+
+	public String getDate() {
+		return date;
 	}
 
 	public int getX() {

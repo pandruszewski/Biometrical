@@ -8,6 +8,7 @@ public class Kuleczka {
 	private int x;
 	private int y;
 	private Color color= Color.blue;
+	private int size=10;
 	
 	
 	public int getX() {
@@ -29,9 +30,18 @@ public class Kuleczka {
 		this.x = x;
 		this.y = y;
 	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
+	}
+	public Color getColor() {
+		return color;
+	}
 	public void paintKuleczka(Graphics2D g){
 		g.setColor(color);
-		g.fillOval(x-3, y-3, 10, 10);
+		g.fillOval(x-(int)(size/2), y-(int)(size/2), size, size);
 	}
 	public void setColor(Color c){
 		this.color=c;

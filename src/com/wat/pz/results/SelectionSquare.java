@@ -1,4 +1,5 @@
 package com.wat.pz.results;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
@@ -33,8 +34,12 @@ public class SelectionSquare {
 	}
 
 	public void paintSquare(Graphics2D g){
-		if(startX!= null&&startY != null && endX != null && endY!= null){
+		float alpha = 0.35f;
+		Color color = new Color(0, 0, 1, alpha);
+		g.setPaint(color);
 		
+		if(startX!= null&&startY != null && endX != null && endY!= null){
+		System.out.println("rysuje SQUARE");
 		g.fillRect(startX, startY, width, height);
 		}
 	}

@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.PriorityQueue;
 import java.util.Properties;
 import java.util.Queue;
@@ -100,11 +102,20 @@ public class Connect extends Thread {
 				// String content = in.nextLine();
 				int content = in.nextInt();
 				// System.out.println(content);
+				long time = System.currentTimeMillis()-connectTime ;
+				Date date = new Date();
+				SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat(
+						"HH:mm:ss");
 
+				StringBuilder sDateB = new StringBuilder(
+						dateformatYYYYMMDD.format(date));
+				
+				String sDate=sDateB.toString();
 				Measurement m = new Measurement(content,
-						(System.currentTimeMillis() - connectTime));
-
+						time,date,sDate);
+			//	System.out.println("t " +time);
 				this.customCollection.addLast(m);
+				System.out.println("t "+m.getTime());
 				wspolrzednaX = wspolrzednaX + odstepPunktow;
 				try {
 					bw.newLine();
@@ -113,6 +124,10 @@ public class Connect extends Thread {
 					bw.write(String.valueOf(content));
 					bw.newLine();
 					bw.write(String.valueOf(indexPlot));
+					bw.newLine();
+					bw.write(String.valueOf(time));
+					bw.newLine();
+					bw.write(String.valueOf(sDate));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

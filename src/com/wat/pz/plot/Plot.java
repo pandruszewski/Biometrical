@@ -9,6 +9,8 @@ import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -114,8 +116,6 @@ public class Plot extends JPanel {
 						.getTime();
 
 				if (current.getTime() % 1000 == 0) {
-
-					System.out.println("IF: " + current.getTime());
 
 					rysujPodzialke(g, i, current);
 					g.setColor(kolor);
@@ -252,9 +252,17 @@ public class Plot extends JPanel {
 				graph.getMinA());
 
 		// double d = (Math.round(((double) m.getTime() / 1000) * 100)) / 100;
-		long l = Math.round((double) m.getTime() / 1000);
+	
 
-		g.drawString(String.valueOf(l), i,
+		Date date = m.getDate();
+
+		SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat(
+				"HH:mm:ss");
+
+		StringBuilder time = new StringBuilder(
+				dateformatYYYYMMDD.format(date));
+		
+	g.drawString(time.toString(), i-25,
 				graph.getSize().height - graph.getOdstepDol() + 20);
 
 	}
