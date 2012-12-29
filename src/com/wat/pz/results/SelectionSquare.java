@@ -34,12 +34,16 @@ public class SelectionSquare {
 	}
 
 	public void paintSquare(Graphics2D g){
+	
+		
+		
 		float alpha = 0.35f;
 		Color color = new Color(0, 0, 1, alpha);
 		g.setPaint(color);
 		
 		if(startX!= null&&startY != null && endX != null && endY!= null){
 		System.out.println("rysuje SQUARE");
+		
 		g.fillRect(startX, startY, width, height);
 		}
 	}

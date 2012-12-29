@@ -1,7 +1,6 @@
 package com.wat.pz.results;
 
 import java.awt.AWTException;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -31,10 +30,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-
-import com.wat.pz.wizualizacja.collection.Measurement;
 
 public class PlotResults extends JPanel {
 
@@ -69,10 +64,11 @@ public class PlotResults extends JPanel {
 	private volatile int first = 0;
 	private volatile int last = 0;
 	private Kuleczka kuleczka = null;
-	private boolean milimeterMode = true;
-	private boolean timeMode = false;
+	private boolean milimeterMode = false;
+	private boolean timeMode = true;
 	private int minA;
 	private int maxA;
+	private int lastMouseMoved;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -88,8 +84,12 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void ancestorResized(HierarchyEvent arg0) {
-				kuleczka = null;
-				repaint();
+//				kuleczka = null;
+				obliczKulke(lastMouseMoved);
+//				repaint();
+				System.out.println("POWIEKSZONY!!!!!!!!");
+				square.setStartY(minA);
+				square.setEndY(maxA);
 			}
 
 			@Override
@@ -224,115 +224,68 @@ public class PlotResults extends JPanel {
 			@Override
 			public void mouseMoved(MouseEvent o) {
 				// System.out.println("dupa2");
-				int wspX = (int) (((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
-
-				if (wspX >= 0 && wspX < data.points.size()) {
-					Point p = data.points.get(wspX);
-
-					Point p2;
-					Point p1 = data.points.get(wspX);
-					if (wspX == 0) {
-						p2 = data.points.get(wspX);
-					} else {
-						p2 = data.points.get(wspX - 1);
-					}
-
-					Point pTmp = null;
-
-					if (p1.getY() < p2.getY()) {
-						pTmp = p1;
-						p1 = p2;
-						p2 = pTmp;
-					}
-
-					System.out.println(p1.getX() + "|" + p2.getX());
-					int tmpX = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
-					int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
-					if (kuleczka == null) {
-						kuleczka = new Kuleczka(o.getX(),
-								obliczPunkt(ilePowinno(tmpX, p1, p2)));
-					} else if (((o.getX() / przeskalujWykresX)
-							- (odstepOdPoczatkuWykresu) >= data.points.get(0)
-							.getX())) {
-						// 10 to zmienna kosmiczna oznaczajaca wart x
-						// pierwszego punktu pomiarowego :)
-
-						kuleczka.setX((int) (o.getX()));
-						kuleczka.setY((int) (obliczPunkt(ilePowinno(tmpX, p1,
-								p2)) * przeskalujWykresY));
-
-						setToolTipText("<html>Wspolrzedna X: "
-								+ (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
-								+ "<br>Wspolrzedna Y: " + ilepowinnobyc2
-								+ "<br>Pomiar urzadzenie nr: " + p1.getIndeks()
-								+ "<br>Czas " + p1.getTime() + "<br>Data: "
-								+ p1.getDate()
-
-								+ "</html>");
-
-						repaint();
-
-					}
-					// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
-					// + "P2  " + p2.getX() + "|" + p2.getY());
-					// System.out.println("obliczpunkt " +
-					// obliczPunkt(p1.getY())
-					// + "|" + obliczPunkt(p2.getY()));
-
-					/*
-					 * if ((o.getY() / przeskalujWykresY) >= plot.obliczPunkt(p1
-					 * .getY()) && (o.getY() / przeskalujWykresY) <= plot
-					 * .obliczPunkt(p2.getY()))
-					 * 
-					 * { int oX = (int) ((o.getX() / przeskalujWykresX) -
-					 * (odstepOdPoczatkuWykresu));
-					 * 
-					 * int ilepowinnobyc = ilePowinno(oX, p1, p2);
-					 * 
-					 * 
-					 * System.out.println(ilepowinnobyc + "|" +
-					 * plot.obliczPunkt2((int) (o.getY() / przeskalujWykresY)));
-					 * 
-					 * //
-					 * if(plot.obliczPunkt2((int)(o.getY()/przeskalujWykresY))
-					 * >=ilepowinnobyc-3 // && //
-					 * plot.obliczPunkt2((int)(o.getY(
-					 * )/przeskalujWykresY))<=ilepowinnobyc+3) if
-					 * (plot.obliczPunktOdwotny((int) (o.getY() /
-					 * przeskalujWykresY)) >= ilepowinnobyc - (0.1 *
-					 * ilepowinnobyc) && plot.obliczPunktOdwotny((int) (o.getY()
-					 * / przeskalujWykresY)) <= ilepowinnobyc + (0.1 *
-					 * ilepowinnobyc)) // if(true) {
-					 * 
-					 * // System.out.print("jest git");
-					 * setToolTipText("<html>Wspolrzedna X: " + (int) ((o.getX()
-					 * / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) +
-					 * "<br>Wspolrzedna Y: " + ilepowinnobyc +
-					 * "<br>Pomiar urzadzenie nr: " + p1.getIndeks() +
-					 * "</html>"); } }
-					 * 
-					 * 
-					 * 
-					 * else if ((o.getY() / przeskalujWykresY) + 3 >= plot
-					 * .obliczPunkt(p.getY()) && (o.getY() / przeskalujWykresY)
-					 * - 3 <= plot .obliczPunkt(p.getY())) {
-					 * 
-					 * // plot.setToolTipText("punkt");
-					 * 
-					 * // System.out.println("kursor" + o.getY() + //
-					 * "\nznalezione" // + plot.obliczPunkt(p.getY()));
-					 * 
-					 * plot.setToolTipText("<html>Wspolrzedna X: " + p.getX() +
-					 * "<br>Wspolrzedna Y: " + p.getY() +
-					 * "<br>Pomiar urzadzenie nr: " + p.getIndeks() +
-					 * "</html>");
-					 * 
-					 * } else if (!wasDragged) { setToolTipText(null); }
-					 */
-
-					p = null;
-					System.gc();
-				}
+//				lastMouseMoved = o.getX();
+//				int wspX = (int) (((lastMouseMoved / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
+//
+//				if (wspX >= 0 && wspX < data.points.size()) {
+//					Point p = data.points.get(wspX);
+//
+//					Point p2;
+//					Point p1 = data.points.get(wspX);
+//					if (wspX == 0) {
+//						p2 = data.points.get(wspX);
+//					} else {
+//						p2 = data.points.get(wspX - 1);
+//					}
+//
+//					Point pTmp = null;
+//
+//					if (p1.getY() < p2.getY()) {
+//						pTmp = p1;
+//						p1 = p2;
+//						p2 = pTmp;
+//					}
+//
+//					System.out.println(p1.getX() + "|" + p2.getX());
+//					int tmpX = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+//					int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
+//					if (kuleczka == null) {
+//						kuleczka = new Kuleczka(o.getX(),
+//								obliczPunkt(ilePowinno(tmpX, p1, p2)));
+//					} else if (((o.getX() / przeskalujWykresX)
+//							- (odstepOdPoczatkuWykresu) >= data.points.get(0)
+//							.getX())) {
+//						// 10 to zmienna kosmiczna oznaczajaca wart x
+//						// pierwszego punktu pomiarowego :)
+//
+//						kuleczka.setX((int) (o.getX()));
+//						kuleczka.setY((int) (obliczPunkt(ilePowinno(tmpX, p1,
+//								p2)) * przeskalujWykresY));
+//
+//						setToolTipText("<html>Wspolrzedna X: "
+//								+ (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
+//								+ "<br>Wspolrzedna Y: " + ilepowinnobyc2
+//								+ "<br>Pomiar urzadzenie nr: " + p1.getIndeks()
+//								+ "<br>Czas " + p1.getTime() + "<br>Data: "
+//								+ p1.getDate()
+//
+//								+ "</html>");
+//
+//						repaint();
+//
+//					}
+//					// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
+//					// + "P2  " + p2.getX() + "|" + p2.getY());
+//					// System.out.println("obliczpunkt " +
+//					// obliczPunkt(p1.getY())
+//					// + "|" + obliczPunkt(p2.getY()));
+//
+//		
+//					p = null;
+//					System.gc();
+//				
+//				}
+				obliczKulke(o.getX());
 
 			}
 
@@ -407,23 +360,27 @@ public class PlotResults extends JPanel {
 
 		if (isMilimeterMode()) {
 			paintMilimeter(gg);
-		
+
 		} else if (isTimeMode()) {
 
 			paintTime(gg);
-		
+			// square.paintSquare((Graphics2D)gg);
 		} else {
 			paintNormally(gg);
-			
+
 		}
-		
-//		square.paintSquare((Graphics2D)gg);
 
 	}
 
 	private void paintMilimeter(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
-		System.out.println("pain milimeter");
+		// System.out.println("pain milimeter");
+
+		if (square.getEndX() == null) {
+			System.out.println("getX==Null");
+		} else {
+			System.out.println("getX==Not Null");
+		}
 
 		square.paintSquare(g);
 		g.scale(przeskalujWykresX, przeskalujWykresY);
@@ -530,7 +487,7 @@ public class PlotResults extends JPanel {
 
 	private void paintNormally(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
-		System.out.println("pain normally");
+		// System.out.println("paint normally");
 
 		square.paintSquare(g);
 
@@ -559,8 +516,8 @@ public class PlotResults extends JPanel {
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
-		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
-											// pionowej
+		minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
+										// pionowej
 
 		/*
 		 * for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
@@ -592,7 +549,7 @@ public class PlotResults extends JPanel {
 
 		}
 
-		int maxA = panel.getSize().height - 30 - odstepDol;
+		maxA = panel.getSize().height - 30 - odstepDol;
 		valueOnLeft = 0;
 		/*
 		 * for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
@@ -662,10 +619,13 @@ public class PlotResults extends JPanel {
 
 	private void paintTime(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
-		System.out.println("pain time");
-//		float alpha = 0.35f;
-//		Color color = new Color(0, 0, 1, alpha);
-//		g.setPaint(color);
+
+		if (square.getEndX() == null) {
+			System.out.println("getX==Null");
+		} else {
+			System.out.println("getX==Not Null");
+		}
+
 		square.paintSquare(g);
 
 		g.scale(przeskalujWykresX, przeskalujWykresY);
@@ -693,16 +653,10 @@ public class PlotResults extends JPanel {
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
-		int minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
-											// pionowej
+		minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
+										// pionowej
 
 		for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
-
-			/*
-			 * valueOnLeft += odstep; g.drawLine(40, a, this.getSize().width,
-			 * a); g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0,
-			 * a + (odstep / 3));
-			 */
 
 			minA = a; // dodal BOlec do rysowania podzialki pionowej
 
@@ -710,11 +664,6 @@ public class PlotResults extends JPanel {
 
 		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
 
-			/*
-			 * valueOnLeft += odstep; g.drawLine(40, a, this.getSize().width,
-			 * a); g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0,
-			 * a + (odstep / 3));
-			 */
 			g.drawLine(40, a, this.getSize().width, a);
 
 			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
@@ -726,19 +675,8 @@ public class PlotResults extends JPanel {
 
 		}
 
-		int maxA = panel.getSize().height - 30 - odstepDol;
+		maxA = panel.getSize().height - 30 - odstepDol;
 		valueOnLeft = 0;
-		/*
-		 * for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
-		 * 
-		 * valueOnLeft -= odstep;
-		 * 
-		 * g.drawLine(40, a, this.getSize().width, a);
-		 * g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a +
-		 * (odstep / 3));
-		 * 
-		 * maxA = a; // dodal BOlec do rysowania podzialki pionowej }
-		 */
 
 		int bolectmp = (int) Math.ceil(wysokosc * skala);
 
@@ -749,25 +687,6 @@ public class PlotResults extends JPanel {
 		FontRenderContext frc = g.getFontRenderContext();
 		int fontWidth = (int) g.getFont().getMaxCharBounds(frc).getWidth();
 
-		/*
-		 * for (int b = 40, i = 0; b < szerokosc; b += odstepX, i++) {
-		 * g.drawLine(b, minA, b, maxA); roznicaWysY = 20;
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * if (i % 4 == 0) {
-		 * 
-		 * if (i < this.data.points.size()) { String str =
-		 * String.valueOf(this.data.points.get(i).getX()); g.drawString( str, b
-		 * - ((fontWidth / str.length()) * (str .length() / 2)), maxA +
-		 * roznicaWysY); } }
-		 * 
-		 * }
-		 * 
-		 * // end edit by bolec
-		 */
 		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
 
 		g.setColor(Color.yellow);
@@ -775,16 +694,18 @@ public class PlotResults extends JPanel {
 		Point o2;
 		odstepOdPoczatkuWykresu = 40 - o1.getX();
 		odstepPunkt = o1.getX();
+
 		for (int i = 1; i < data.points.size(); i++) {
 
 			o2 = data.points.get(i);
-			//System.out.println(o1.getDate() + " | " + o2.getDate());
+			// System.out.println(o1.getDate() + " | " + o2.getDate());
 
 			if (!o1.getDate().equals(o2.getDate())) {
 				g.setColor(Color.gray);
 				g.drawLine(o2.getX() + odstepOdPoczatkuWykresu, minA, o2.getX()
 						+ odstepOdPoczatkuWykresu, maxA);
-				g.drawString(o2.getDate().toString(),o2.getX()+(int)(odstepOdPoczatkuWykresu/2.5), maxA+20);
+				g.drawString(o2.getDate().toString(), o2.getX()
+						+ (int) (odstepOdPoczatkuWykresu / 2.5), maxA + 20);
 				g.setColor(Color.yellow);
 			}
 
@@ -795,11 +716,14 @@ public class PlotResults extends JPanel {
 		}
 
 		if (kuleczka != null) {
+			// square.paintSquare(g);
 			int kX = kuleczka.getX();
 			int kY = kuleczka.getY();
 
 			g.scale(1.0 / przeskalujWykresX, 1.0 / przeskalujWykresY);
 			kuleczka.paintKuleczka(g);
+			// g.scale(przeskalujWykresX, przeskalujWykresY);
+			// g.scale(przeskalujWykresX, przeskalujWykresY);
 		}
 
 	}
@@ -839,9 +763,9 @@ public class PlotResults extends JPanel {
 
 	public int ilePowinno(int x, Point p1, Point p2) {
 
-		System.out.println("punktyX " + p1.getX() + "|" + p2.getX());
-
-		System.out.println("punktyY " + p1.getY() + "|" + p2.getY());
+		// System.out.println("punktyX " + p1.getX() + "|" + p2.getX());
+		//
+		// System.out.println("punktyY " + p1.getY() + "|" + p2.getY());
 		double a;
 		int ile = 0;
 		if ((p1.getX()) - (p2.getX()) == 0) {
@@ -851,10 +775,10 @@ public class PlotResults extends JPanel {
 					.getX())));
 		}
 		double b = p1.getY() - ((p1.getX() * a));
-		System.out.println("b= " + b + "a= " + a + "x= " + x);
+		// System.out.println("b= " + b + "a= " + a + "x= " + x);
 		ile = (int) Math.round(((a * x) + b));
-		System.out.println((a * x) + b);
-		System.out.println("ile= " + ile);
+		// / System.out.println((a * x) + b);
+		// System.out.println("ile= " + ile);
 		return ile;
 
 	}
@@ -864,7 +788,7 @@ public class PlotResults extends JPanel {
 		if (last - first < 2)
 			return;
 
-		System.out.println("dsaasdasdsdfafsd" + first + "|" + last);
+		// System.out.println("dsaasdasdsdfafsd" + first + "|" + last);
 
 		List<com.wat.pz.results.Point> tmpPoints = data.points.subList(first,
 				last);
@@ -923,4 +847,66 @@ public class PlotResults extends JPanel {
 		repaint();
 	}
 
+	
+	public void obliczKulke(int x){
+		lastMouseMoved = x;
+		int wspX = (int) (((lastMouseMoved / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
+
+		if (wspX >= 0 && wspX < data.points.size()) {
+			Point p = data.points.get(wspX);
+
+			Point p2;
+			Point p1 = data.points.get(wspX);
+			if (wspX == 0) {
+				p2 = data.points.get(wspX);
+			} else {
+				p2 = data.points.get(wspX - 1);
+			}
+
+			Point pTmp = null;
+
+			if (p1.getY() < p2.getY()) {
+				pTmp = p1;
+				p1 = p2;
+				p2 = pTmp;
+			}
+
+			System.out.println(p1.getX() + "|" + p2.getX());
+			int tmpX = (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+			int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
+			if (kuleczka == null) {
+				kuleczka = new Kuleczka(x,
+						obliczPunkt(ilePowinno(tmpX, p1, p2)));
+			} else if (((x / przeskalujWykresX)
+					- (odstepOdPoczatkuWykresu) >= data.points.get(0)
+					.getX())) {
+				// 10 to zmienna kosmiczna oznaczajaca wart x
+				// pierwszego punktu pomiarowego :)
+
+				kuleczka.setX((int) (x));
+				kuleczka.setY((int) (obliczPunkt(ilePowinno(tmpX, p1,
+						p2)) * przeskalujWykresY));
+
+				setToolTipText("<html>Wspolrzedna X: "
+						+ (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
+						+ "<br>Wspolrzedna Y: " + ilepowinnobyc2
+						+ "<br>Pomiar urzadzenie nr: " + p1.getIndeks()
+						+ "<br>Czas " + p1.getTime() + "<br>Data: "
+						+ p1.getDate()
+
+						+ "</html>");
+
+				repaint();
+
+			}
+			// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
+			// + "P2  " + p2.getX() + "|" + p2.getY());
+			// System.out.println("obliczpunkt " +
+			// obliczPunkt(p1.getY())
+			// + "|" + obliczPunkt(p2.getY()));
+
+
+			p = null;
+	}
 }
+	}
