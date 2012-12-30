@@ -39,7 +39,6 @@ public class PlotResults extends JPanel {
 	private int wysokosc = 0;
 	private int szerokosc = 0;
 	private int dlugoscY = 0;
-	private int dlugoscX = 0; // dodal Bolec do rysowania podzialki pionowej
 	private int odstep = 20;
 	private int odstepMilimeterX = 4;
 	private int odstepMilimeterY = 4;
@@ -49,16 +48,11 @@ public class PlotResults extends JPanel {
 	private int odstepGora = 0;
 	private int odstepOdPoczatkuWykresu = 0;
 	private int odstepPunkt = 0;
-	private Graphics graphic = null;
 	private double przeskalujWykresX = 1.0;
 	private double przeskalujWykresY = 1.0;
 	private SelectionSquare square = new SelectionSquare();
-	private boolean wasDragged = false;
-	private boolean pressed = false;
 	private int xPressed = 0;
 	private int xReleased = 0;
-	private JFrame frame;
-	private AWTEventListener awtListener;
 	private Results noweOkno = null;
 	private volatile int first = 0;
 	private volatile int last = 0;
@@ -68,7 +62,6 @@ public class PlotResults extends JPanel {
 	private int minA;
 	private int maxA;
 	private int lastMouseMoved;
-	private int lastMouseMovedForKuleczka;
 	private int startX;
 	private int startY;
 	private int endX;
@@ -76,7 +69,6 @@ public class PlotResults extends JPanel {
 	private int pozycjaYKulki;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
-		frame = f;
 		this.data = dataObject;
 		this.panel = panel;
 
@@ -113,7 +105,6 @@ public class PlotResults extends JPanel {
 				square.setEndX((int) (endX * przeskalujWykresX));
 				square.setEndY((int) (endY * przeskalujWykresY));
 				repaint();
-				pressed = false;
 
 			}
 
@@ -121,12 +112,10 @@ public class PlotResults extends JPanel {
 			public void mousePressed(MouseEvent o) {
 				square.setEndX(null);
 				square.setEndY(null);
-				pressed = true;
 				startX = (int) (o.getX() / przeskalujWykresX);
 				if (startX * przeskalujWykresX >= 40 * przeskalujWykresX) {
 
 				} else {
-					// System.out.println("wyrownuj");
 					startX = (int) (40);
 				}
 				startY = (int) (minA/* / przeskalujWykresY */);
@@ -134,7 +123,6 @@ public class PlotResults extends JPanel {
 				square.setStartY((int) (startY * przeskalujWykresY));
 				square.setStartXOnScreen(o.getXOnScreen());
 				square.setStartYOnScreen(o.getYOnScreen());
-				wasDragged = false;
 				xPressed = (int) ((startX / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 				repaint();
 
@@ -159,7 +147,7 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				wasDragged = true;
+//				wasDragged = true;
 				endX = (int) (e.getX() / przeskalujWykresX);
 				endY = (int) (maxA /* / przeskalujWykresY */);
 				if (!((endX * przeskalujWykresX) <= przeskalujWykresX
@@ -222,7 +210,6 @@ public class PlotResults extends JPanel {
 				} else {
 					lastMouseMoved = 40;
 				}
-				lastMouseMovedForKuleczka = (int) (lastMouseMoved * przeskalujWykresX);
 				obliczKulke((int) (lastMouseMoved * przeskalujWykresX));
 
 			}
@@ -302,7 +289,6 @@ public class PlotResults extends JPanel {
 
 	private void paintMilimeter(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
-		// System.out.println("pain milimeter");
 
 		if (square.getEndX() == null) {
 			// System.out.println("getX==Null");
@@ -416,7 +402,6 @@ public class PlotResults extends JPanel {
 
 	private void paintNormally(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
-		// System.out.println("paint normally");
 
 		square.paintSquare(g);
 
@@ -598,7 +583,6 @@ public class PlotResults extends JPanel {
 		for (int i = 1; i < data.points.size(); i++) {
 
 			o2 = data.points.get(i);
-			// System.out.println(o1.getDate() + " | " + o2.getDate());
 
 			if (!o1.getDate().equals(o2.getDate())) {
 				g.setColor(Color.gray);
@@ -716,13 +700,11 @@ public class PlotResults extends JPanel {
 			}
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		noweOkno = new Results(nowDate.toString() + ".txt");
 		noweOkno.setVisible(true);
-		wasDragged = false;
 
 	}
 
