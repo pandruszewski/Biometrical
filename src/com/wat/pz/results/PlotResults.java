@@ -50,7 +50,6 @@ public class PlotResults extends JPanel {
 	private int odstepOdPoczatkuWykresu = 0;
 	private int odstepPunkt = 0;
 	private Graphics graphic = null;
-	private PlotResults plot = null;
 	private double przeskalujWykresX = 1.0;
 	private double przeskalujWykresY = 1.0;
 	private SelectionSquare square = new SelectionSquare();
@@ -80,19 +79,19 @@ public class PlotResults extends JPanel {
 		frame = f;
 		this.data = dataObject;
 		this.panel = panel;
-		plot = this;
+
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 
-		// ToolTipManager.sharedInstance().setDismissDelay(500);
-		// this.setToolTipText("lalalal");
-		// graphic = this.getGraphics();
+
 		this.addHierarchyBoundsListener(new HierarchyBoundsListener() {
 
 			@Override
 			public void ancestorResized(HierarchyEvent arg0) {
 				obliczKulke(lastMouseMoved);
-				square.setStartY(minA);
-				square.setEndY(maxA);
+				startY = (int) (minA /* / przeskalujWykresY */);
+				endY = (int) (maxA /* /przeskalujWykresY */);
+				square.setStartY((int) (startY * przeskalujWykresY));
+				square.setEndY((int) (endY * przeskalujWykresY));
 			}
 
 			@Override
@@ -105,7 +104,7 @@ public class PlotResults extends JPanel {
 			@Override
 			public void mouseReleased(MouseEvent o) {
 				endX = (int) (o.getX() / przeskalujWykresX);
-				endY = (int) (maxA / przeskalujWykresY);
+				endY = (int) (maxA /* / przeskalujWykresY */);
 				if (!((endX * przeskalujWykresX) <= przeskalujWykresX
 						* ((data.points.size() * odstepX) + 30))) {
 					endX = (int) ((((data.points.size()) * odstepX) + 30) * przeskalujWykresX);
@@ -127,10 +126,10 @@ public class PlotResults extends JPanel {
 				if (startX * przeskalujWykresX >= 40 * przeskalujWykresX) {
 
 				} else {
-					System.out.println("wyrownuj");
+					// System.out.println("wyrownuj");
 					startX = (int) (40);
 				}
-				startY = (int) (minA / przeskalujWykresY);
+				startY = (int) (minA/* / przeskalujWykresY */);
 				square.setStartX((int) (startX * przeskalujWykresX));
 				square.setStartY((int) (startY * przeskalujWykresY));
 				square.setStartXOnScreen(o.getXOnScreen());
@@ -162,7 +161,7 @@ public class PlotResults extends JPanel {
 			public void mouseDragged(MouseEvent e) {
 				wasDragged = true;
 				endX = (int) (e.getX() / przeskalujWykresX);
-				endY = (int) (maxA / przeskalujWykresY);
+				endY = (int) (maxA /* / przeskalujWykresY */);
 				if (!((endX * przeskalujWykresX) <= przeskalujWykresX
 						* ((data.points.size() * odstepX) + 30))) {
 					endX = (int) ((((data.points.size()) * odstepX) + 30) * przeskalujWykresX);
@@ -238,7 +237,7 @@ public class PlotResults extends JPanel {
 			int w = square.getSize().width;
 			int h = square.getSize().height;
 			square.setWidth(-1);
-			plot.paintImmediately(square.getStartX(), square.getStartY(), w, h);
+			paintImmediately(square.getStartX(), square.getStartY(), w, h);
 
 			Rectangle screenRect = new Rectangle();
 			screenRect.setBounds(square.getStartXOnScreen(),
@@ -306,9 +305,9 @@ public class PlotResults extends JPanel {
 		// System.out.println("pain milimeter");
 
 		if (square.getEndX() == null) {
-			System.out.println("getX==Null");
+			// System.out.println("getX==Null");
 		} else {
-			System.out.println("getX==Not Null");
+			// System.out.println("getX==Not Null");
 		}
 
 		square.paintSquare(g);
@@ -350,6 +349,7 @@ public class PlotResults extends JPanel {
 			minA = a; // dodal BOlec do rysowania podzialki pionowej
 
 		}
+		System.out.println("ZORBILO SIE MINIMUM A");
 		for (int a = panel.getSize().height - 30 - odstepDol; a >= minA; a -= odstepMilimeterX) {
 			g.drawLine(40, a, this.getSize().width, a);
 		}
@@ -521,9 +521,9 @@ public class PlotResults extends JPanel {
 		Graphics2D g = (Graphics2D) gg;
 
 		if (square.getEndX() == null) {
-			System.out.println("getX==Null");
+			//System.out.println("getX==Null");
 		} else {
-			System.out.println("getX==Not Null");
+			//System.out.println("getX==Not Null");
 		}
 
 		square.paintSquare(g);

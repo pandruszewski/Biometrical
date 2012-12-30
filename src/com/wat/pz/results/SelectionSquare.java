@@ -42,7 +42,7 @@ public class SelectionSquare {
 		g.setPaint(color);
 
 		if (startX != null && startY != null && endX != null && endY != null) {
-			System.out.println("rysuje SQUARE");
+			//System.out.println("rysuje SQUARE");
 
 			g.fillRect(startX, startY, width, height);
 		}
