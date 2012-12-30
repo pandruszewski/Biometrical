@@ -74,6 +74,7 @@ public class PlotResults extends JPanel {
 	private int startY;
 	private int endX;
 	private int endY;
+	private int pozycjaYKulki;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -103,12 +104,16 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent o) {
-				endX = (int)(o.getX()/ przeskalujWykresX);
-				endY = (int)(maxA / przeskalujWykresY);
-				square.setEndX((int)(endX * przeskalujWykresX));
-				square.setEndY((int)(endY * przeskalujWykresY));
+				endX = (int) (o.getX() / przeskalujWykresX);
+				endY = (int) (maxA / przeskalujWykresY);
+				if (!((endX * przeskalujWykresX) <= przeskalujWykresX
+						* ((data.points.size() * odstepX) + 30))) {
+					endX = (int) ((((data.points.size()) * odstepX) + 30) * przeskalujWykresX);
+					endX /= przeskalujWykresX;
+				}
+				square.setEndX((int) (endX * przeskalujWykresX));
+				square.setEndY((int) (endY * przeskalujWykresY));
 				repaint();
-
 				pressed = false;
 
 			}
@@ -118,14 +123,20 @@ public class PlotResults extends JPanel {
 				square.setEndX(null);
 				square.setEndY(null);
 				pressed = true;
-				startX = (int)(o.getX() / przeskalujWykresX);
-				startY = (int)(minA/ przeskalujWykresY);
-				square.setStartX((int)(startX * przeskalujWykresX));
-				square.setStartY((int)(startY * przeskalujWykresY));
+				startX = (int) (o.getX() / przeskalujWykresX);
+				if (startX * przeskalujWykresX >= 40 * przeskalujWykresX) {
+
+				} else {
+					System.out.println("wyrownuj");
+					startX = (int) (40);
+				}
+				startY = (int) (minA / przeskalujWykresY);
+				square.setStartX((int) (startX * przeskalujWykresX));
+				square.setStartY((int) (startY * przeskalujWykresY));
 				square.setStartXOnScreen(o.getXOnScreen());
 				square.setStartYOnScreen(o.getYOnScreen());
 				wasDragged = false;
-				xPressed = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+				xPressed = (int) ((startX / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 				repaint();
 
 			}
@@ -150,12 +161,16 @@ public class PlotResults extends JPanel {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				wasDragged = true;
-				endX = (int)(e.getX()/przeskalujWykresX);
-				endY = (int)(maxA / przeskalujWykresY);
-				square.setEndX((int)(endX * przeskalujWykresX));
-				square.setEndY((int)(endY * przeskalujWykresY));
-
-				xReleased = (int) ((e.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
+				endX = (int) (e.getX() / przeskalujWykresX);
+				endY = (int) (maxA / przeskalujWykresY);
+				if (!((endX * przeskalujWykresX) <= przeskalujWykresX
+						* ((data.points.size() * odstepX) + 30))) {
+					endX = (int) ((((data.points.size()) * odstepX) + 30) * przeskalujWykresX);
+					endX /= przeskalujWykresX;
+				}
+				square.setEndX((int) (endX * przeskalujWykresX));
+				square.setEndY((int) (endY * przeskalujWykresY));
+				xReleased = (int) ((endX / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 
 				if (xPressed < xReleased) {
 
@@ -200,17 +215,16 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseMoved(MouseEvent o) {
-			
-//				}
-				if((int)(o.getX() / przeskalujWykresX) >= 40){
-					lastMouseMoved = ((int)(o.getX() / przeskalujWykresX));
-				
-				}
-				else{
+
+				// }
+				if ((int) (o.getX() / przeskalujWykresX) >= 40) {
+					lastMouseMoved = ((int) (o.getX() / przeskalujWykresX));
+
+				} else {
 					lastMouseMoved = 40;
 				}
-				lastMouseMovedForKuleczka =(int)(lastMouseMoved * przeskalujWykresX);
-				obliczKulke((int)(lastMouseMoved * przeskalujWykresX));
+				lastMouseMovedForKuleczka = (int) (lastMouseMoved * przeskalujWykresX);
+				obliczKulke((int) (lastMouseMoved * przeskalujWykresX));
 
 			}
 
@@ -630,21 +644,21 @@ public class PlotResults extends JPanel {
 
 	public void setPrzeskalujWykresX(int x) {
 		przeskalujWykresX = (double) x / 10.0;
-		if(square.getEndX() != null){
-			square.setStartX((int)(startX * przeskalujWykresX));
-			square.setEndX((int)(endX * przeskalujWykresX));
+		if (square.getEndX() != null) {
+			square.setStartX((int) (startX * przeskalujWykresX));
+			square.setEndX((int) (endX * przeskalujWykresX));
 		}
-		obliczKulke((int)(lastMouseMoved * przeskalujWykresX));
+		obliczKulke((int) (lastMouseMoved * przeskalujWykresX));
 
 	}
 
 	public void setPrzeskalujWykresY(int y) {
 		przeskalujWykresY = (double) y / 10.0;
-		if(square.getEndY() != null){
-			square.setStartY( (int)(startY * przeskalujWykresY));
-			square.setEndY((int)(endY * przeskalujWykresY));
+		if (square.getEndY() != null) {
+			square.setStartY((int) (startY * przeskalujWykresY));
+			square.setEndY((int) (endY * przeskalujWykresY));
 		}
-		obliczKulke((int)(lastMouseMoved * przeskalujWykresX));
+		obliczKulke((int) (lastMouseMoved * przeskalujWykresX));
 
 	}
 
@@ -727,8 +741,7 @@ public class PlotResults extends JPanel {
 		repaint();
 	}
 
-	
-	public void obliczKulke(int x){
+	public void obliczKulke(int x) {
 
 		int wspX = (int) (((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
 
@@ -751,21 +764,19 @@ public class PlotResults extends JPanel {
 				p2 = pTmp;
 			}
 
-//			System.out.println(p1.getX() + "|" + p2.getX());
+			// System.out.println(p1.getX() + "|" + p2.getX());
 			int tmpX = (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 			int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
 			if (kuleczka == null) {
 				kuleczka = new Kuleczka(x,
 						obliczPunkt(ilePowinno(tmpX, p1, p2)));
-			} else if (((x / przeskalujWykresX)
-					- (odstepOdPoczatkuWykresu) >= data.points.get(0)
-					.getX())) {
+			} else if (((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu) >= data.points
+					.get(0).getX())) {
 				// 10 to zmienna kosmiczna oznaczajaca wart x
 				// pierwszego punktu pomiarowego :)
-
+				pozycjaYKulki = (int) (obliczPunkt(ilePowinno(tmpX, p1, p2)) * przeskalujWykresY);
 				kuleczka.setX((int) (x));
-				kuleczka.setY((int) (obliczPunkt(ilePowinno(tmpX, p1,
-						p2)) * przeskalujWykresY));
+				kuleczka.setY(pozycjaYKulki);
 
 				setToolTipText("<html>Wspolrzedna X: "
 						+ (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
@@ -781,6 +792,17 @@ public class PlotResults extends JPanel {
 			}
 
 			p = null;
+		}
 	}
+
+	@Override
+	public java.awt.Point getToolTipLocation(MouseEvent event) {
+		if (event.getID() == MouseEvent.MOUSE_MOVED) {
+			return new java.awt.Point(
+					(int) ((lastMouseMoved) * przeskalujWykresX),
+					pozycjaYKulki + 5);
+		}
+		return super.getToolTipLocation(event);
+	}
+
 }
-	}
