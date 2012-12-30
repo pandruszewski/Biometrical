@@ -1,8 +1,8 @@
 package com.wat.pz.results;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-
 
 public class SelectionSquare {
 	private Integer startX;
@@ -11,6 +11,7 @@ public class SelectionSquare {
 	private Integer endY;
 	private Integer startXOnScreen;
 	private Integer startYOnScreen;
+
 	public Integer getStartXOnScreen() {
 		return startXOnScreen;
 	}
@@ -29,22 +30,21 @@ public class SelectionSquare {
 
 	private int height;
 	private int width;
+
 	public int getStartX() {
 		return startX;
 	}
 
-	public void paintSquare(Graphics2D g){
-	
-		
-		
+	public void paintSquare(Graphics2D g) {
+
 		float alpha = 0.35f;
 		Color color = new Color(0, 0, 1, alpha);
 		g.setPaint(color);
-		
-		if(startX!= null&&startY != null && endX != null && endY!= null){
-		System.out.println("rysuje SQUARE");
-		
-		g.fillRect(startX, startY, width, height);
+
+		if (startX != null && startY != null && endX != null && endY != null) {
+			System.out.println("rysuje SQUARE");
+
+			g.fillRect(startX, startY, width, height);
 		}
 	}
 
@@ -78,7 +78,7 @@ public class SelectionSquare {
 
 	public void setEndX(Integer endX) {
 		this.endX = endX;
-		if(this.endX != null) 
+		if (this.endX != null)
 			setWidth(this.endX - startX);
 	}
 
@@ -88,7 +88,7 @@ public class SelectionSquare {
 
 	public void setEndY(Integer endY) {
 		this.endY = endY;
-		if(this.endY != null)
+		if (this.endY != null)
 			setHeight(this.endY - startY);
 	}
 
@@ -96,8 +96,8 @@ public class SelectionSquare {
 		this.startX = startX;
 	}
 
-	public Dimension getSize(){
+	public Dimension getSize() {
 		return new Dimension(getWidth(), getHeight());
 	}
-	
+
 }

@@ -69,6 +69,11 @@ public class PlotResults extends JPanel {
 	private int minA;
 	private int maxA;
 	private int lastMouseMoved;
+	private int lastMouseMovedForKuleczka;
+	private int startX;
+	private int startY;
+	private int endX;
+	private int endY;
 
 	public PlotResults(Data dataObject, JPanel panel, JFrame f) {
 		frame = f;
@@ -84,17 +89,13 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void ancestorResized(HierarchyEvent arg0) {
-//				kuleczka = null;
 				obliczKulke(lastMouseMoved);
-//				repaint();
-				System.out.println("POWIEKSZONY!!!!!!!!");
 				square.setStartY(minA);
 				square.setEndY(maxA);
 			}
 
 			@Override
 			public void ancestorMoved(HierarchyEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -102,28 +103,25 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseReleased(MouseEvent o) {
-				/*
-				 * if (o.getXOnScreen() < (frame.getSize().width - 22) &&
-				 * o.getYOnScreen() < (frame.getSize().height - 20))
-				 */
-				square.setEndX(o.getX());
-				square.setEndY(maxA);
+				endX = (int)(o.getX()/ przeskalujWykresX);
+				endY = (int)(maxA / przeskalujWykresY);
+				square.setEndX((int)(endX * przeskalujWykresX));
+				square.setEndY((int)(endY * przeskalujWykresY));
 				repaint();
 
 				pressed = false;
-
-				// copyToClipboard();
 
 			}
 
 			@Override
 			public void mousePressed(MouseEvent o) {
-				// System.out.println(o.getLocationOnScreen().x);
 				square.setEndX(null);
 				square.setEndY(null);
 				pressed = true;
-				square.setStartX(o.getX());
-				square.setStartY(minA);
+				startX = (int)(o.getX() / przeskalujWykresX);
+				startY = (int)(minA/ przeskalujWykresY);
+				square.setStartX((int)(startX * przeskalujWykresX));
+				square.setStartY((int)(startY * przeskalujWykresY));
 				square.setStartXOnScreen(o.getXOnScreen());
 				square.setStartYOnScreen(o.getYOnScreen());
 				wasDragged = false;
@@ -134,13 +132,10 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -155,28 +150,12 @@ public class PlotResults extends JPanel {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				wasDragged = true;
-
-				/*
-				 * if (pressed && e.getXOnScreen() < (frame.getSize().width -
-				 * 22) && e.getYOnScreen() < (frame.getSize().height - 20))
-				 */
-
-				square.setEndX(e.getX());
-				square.setEndY(maxA);
+				endX = (int)(e.getX()/przeskalujWykresX);
+				endY = (int)(maxA / przeskalujWykresY);
+				square.setEndX((int)(endX * przeskalujWykresX));
+				square.setEndY((int)(endY * przeskalujWykresY));
 
 				xReleased = (int) ((e.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
-
-				// System.out.println(e.getX()+"|"+e.getY());
-
-				// System.out.println("Przed : " + xPressed + "|" + xReleased);
-				/*
-				 * if (xPressed > xReleased) { int tmp = xPressed; xPressed =
-				 * xReleased; xReleased = tmp;
-				 * 
-				 * }
-				 */
-
-				System.out.println("Po : " + xPressed + "|" + xReleased);
 
 				if (xPressed < xReleased) {
 
@@ -212,8 +191,6 @@ public class PlotResults extends JPanel {
 					}
 				}
 
-				// System.out.println(first + " asdf " + last);
-
 				setToolTipText("<html>Zaznaczy³eœ" + "<br>" + (last - first)
 						+ " punktów " + "</html>");
 
@@ -223,69 +200,17 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseMoved(MouseEvent o) {
-				// System.out.println("dupa2");
-//				lastMouseMoved = o.getX();
-//				int wspX = (int) (((lastMouseMoved / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
-//
-//				if (wspX >= 0 && wspX < data.points.size()) {
-//					Point p = data.points.get(wspX);
-//
-//					Point p2;
-//					Point p1 = data.points.get(wspX);
-//					if (wspX == 0) {
-//						p2 = data.points.get(wspX);
-//					} else {
-//						p2 = data.points.get(wspX - 1);
-//					}
-//
-//					Point pTmp = null;
-//
-//					if (p1.getY() < p2.getY()) {
-//						pTmp = p1;
-//						p1 = p2;
-//						p2 = pTmp;
-//					}
-//
-//					System.out.println(p1.getX() + "|" + p2.getX());
-//					int tmpX = (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
-//					int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
-//					if (kuleczka == null) {
-//						kuleczka = new Kuleczka(o.getX(),
-//								obliczPunkt(ilePowinno(tmpX, p1, p2)));
-//					} else if (((o.getX() / przeskalujWykresX)
-//							- (odstepOdPoczatkuWykresu) >= data.points.get(0)
-//							.getX())) {
-//						// 10 to zmienna kosmiczna oznaczajaca wart x
-//						// pierwszego punktu pomiarowego :)
-//
-//						kuleczka.setX((int) (o.getX()));
-//						kuleczka.setY((int) (obliczPunkt(ilePowinno(tmpX, p1,
-//								p2)) * przeskalujWykresY));
-//
-//						setToolTipText("<html>Wspolrzedna X: "
-//								+ (int) ((o.getX() / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
-//								+ "<br>Wspolrzedna Y: " + ilepowinnobyc2
-//								+ "<br>Pomiar urzadzenie nr: " + p1.getIndeks()
-//								+ "<br>Czas " + p1.getTime() + "<br>Data: "
-//								+ p1.getDate()
-//
-//								+ "</html>");
-//
-//						repaint();
-//
-//					}
-//					// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
-//					// + "P2  " + p2.getX() + "|" + p2.getY());
-//					// System.out.println("obliczpunkt " +
-//					// obliczPunkt(p1.getY())
-//					// + "|" + obliczPunkt(p2.getY()));
-//
-//		
-//					p = null;
-//					System.gc();
-//				
+			
 //				}
-				obliczKulke(o.getX());
+				if((int)(o.getX() / przeskalujWykresX) >= 40){
+					lastMouseMoved = ((int)(o.getX() / przeskalujWykresX));
+				
+				}
+				else{
+					lastMouseMoved = 40;
+				}
+				lastMouseMovedForKuleczka =(int)(lastMouseMoved * przeskalujWykresX);
+				obliczKulke((int)(lastMouseMoved * przeskalujWykresX));
 
 			}
 
@@ -295,9 +220,6 @@ public class PlotResults extends JPanel {
 
 	public void copyImage(int parametr) {
 
-		// System.out.println(square.getStartX() + " " +
-		// getSize().width);
-
 		if (square.getWidth() > 0 && square.getHeight() > 0) {
 			int w = square.getSize().width;
 			int h = square.getSize().height;
@@ -305,10 +227,6 @@ public class PlotResults extends JPanel {
 			plot.paintImmediately(square.getStartX(), square.getStartY(), w, h);
 
 			Rectangle screenRect = new Rectangle();
-			// System.out.println(odstepGora + "  " + square.getStartYOnScreen()
-			// + "   " + (frame.getBounds().y + square.getStartYOnScreen()));
-			// plot.repaint();
-
 			screenRect.setBounds(square.getStartXOnScreen(),
 					square.getStartYOnScreen(), w, h);
 
@@ -318,7 +236,6 @@ public class PlotResults extends JPanel {
 				capture = new Robot().createScreenCapture(screenRect);
 
 			} catch (AWTException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			if (parametr == 1) {
@@ -342,7 +259,6 @@ public class PlotResults extends JPanel {
 										.getSelectedFile().toString() + ".png")));
 						capture = null;
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -364,7 +280,6 @@ public class PlotResults extends JPanel {
 		} else if (isTimeMode()) {
 
 			paintTime(gg);
-			// square.paintSquare((Graphics2D)gg);
 		} else {
 			paintNormally(gg);
 
@@ -518,26 +433,8 @@ public class PlotResults extends JPanel {
 		g.setColor(Color.gray);
 		minA = dlugoscY + 10 - odstep; // dodal BOlec do rysowania podzialki
 										// pionowej
-
-		/*
-		 * for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
-		 * 
-		 * valueOnLeft += odstep; g.drawLine(40, a, this.getSize().width, a);
-		 * g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a +
-		 * (odstep / 3));
-		 * 
-		 * minA = a; // dodal BOlec do rysowania podzialki pionowej
-		 * 
-		 * }
-		 */
-
 		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
 
-			/*
-			 * valueOnLeft += odstep; g.drawLine(40, a, this.getSize().width,
-			 * a); g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0,
-			 * a + (odstep / 3));
-			 */
 			g.drawLine(40, a, this.getSize().width, a);
 
 			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
@@ -551,17 +448,6 @@ public class PlotResults extends JPanel {
 
 		maxA = panel.getSize().height - 30 - odstepDol;
 		valueOnLeft = 0;
-		/*
-		 * for (int a = dlugoscY + 10 + odstep; a < wysokosc; a += odstep) {
-		 * 
-		 * valueOnLeft -= odstep;
-		 * 
-		 * g.drawLine(40, a, this.getSize().width, a);
-		 * g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a +
-		 * (odstep / 3));
-		 * 
-		 * maxA = a; // dodal BOlec do rysowania podzialki pionowej }
-		 */
 
 		int bolectmp = (int) Math.ceil(wysokosc * skala);
 
@@ -716,14 +602,11 @@ public class PlotResults extends JPanel {
 		}
 
 		if (kuleczka != null) {
-			// square.paintSquare(g);
 			int kX = kuleczka.getX();
 			int kY = kuleczka.getY();
 
 			g.scale(1.0 / przeskalujWykresX, 1.0 / przeskalujWykresY);
 			kuleczka.paintKuleczka(g);
-			// g.scale(przeskalujWykresX, przeskalujWykresY);
-			// g.scale(przeskalujWykresX, przeskalujWykresY);
 		}
 
 	}
@@ -747,25 +630,26 @@ public class PlotResults extends JPanel {
 
 	public void setPrzeskalujWykresX(int x) {
 		przeskalujWykresX = (double) x / 10.0;
-		kuleczka.setX(-20);
-		kuleczka.setY(-20);
-		repaint();
+		if(square.getEndX() != null){
+			square.setStartX((int)(startX * przeskalujWykresX));
+			square.setEndX((int)(endX * przeskalujWykresX));
+		}
+		obliczKulke((int)(lastMouseMoved * przeskalujWykresX));
 
 	}
 
 	public void setPrzeskalujWykresY(int y) {
 		przeskalujWykresY = (double) y / 10.0;
-		kuleczka.setX(-20);
-		kuleczka.setY(-20);
-		repaint();
+		if(square.getEndY() != null){
+			square.setStartY( (int)(startY * przeskalujWykresY));
+			square.setEndY((int)(endY * przeskalujWykresY));
+		}
+		obliczKulke((int)(lastMouseMoved * przeskalujWykresX));
 
 	}
 
 	public int ilePowinno(int x, Point p1, Point p2) {
 
-		// System.out.println("punktyX " + p1.getX() + "|" + p2.getX());
-		//
-		// System.out.println("punktyY " + p1.getY() + "|" + p2.getY());
 		double a;
 		int ile = 0;
 		if ((p1.getX()) - (p2.getX()) == 0) {
@@ -777,8 +661,6 @@ public class PlotResults extends JPanel {
 		double b = p1.getY() - ((p1.getX() * a));
 		// System.out.println("b= " + b + "a= " + a + "x= " + x);
 		ile = (int) Math.round(((a * x) + b));
-		// / System.out.println((a * x) + b);
-		// System.out.println("ile= " + ile);
 		return ile;
 
 	}
@@ -787,8 +669,6 @@ public class PlotResults extends JPanel {
 
 		if (last - first < 2)
 			return;
-
-		// System.out.println("dsaasdasdsdfafsd" + first + "|" + last);
 
 		List<com.wat.pz.results.Point> tmpPoints = data.points.subList(first,
 				last);
@@ -849,8 +729,8 @@ public class PlotResults extends JPanel {
 
 	
 	public void obliczKulke(int x){
-		lastMouseMoved = x;
-		int wspX = (int) (((lastMouseMoved / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
+
+		int wspX = (int) (((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
 
 		if (wspX >= 0 && wspX < data.points.size()) {
 			Point p = data.points.get(wspX);
@@ -871,7 +751,7 @@ public class PlotResults extends JPanel {
 				p2 = pTmp;
 			}
 
-			System.out.println(p1.getX() + "|" + p2.getX());
+//			System.out.println(p1.getX() + "|" + p2.getX());
 			int tmpX = (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 			int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
 			if (kuleczka == null) {
@@ -899,12 +779,6 @@ public class PlotResults extends JPanel {
 				repaint();
 
 			}
-			// System.out.println("P1  " + p1.getX() + "|" + p1.getY()
-			// + "P2  " + p2.getX() + "|" + p2.getY());
-			// System.out.println("obliczpunkt " +
-			// obliczPunkt(p1.getY())
-			// + "|" + obliczPunkt(p2.getY()));
-
 
 			p = null;
 	}
