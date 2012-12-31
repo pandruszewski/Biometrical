@@ -93,8 +93,7 @@ public class PropertiesWindow extends JFrame {
 		ustawZrodla.addActionListener(new ActionListener() {
 
 			@Override
-			// astanowilbym sie nad sensem tych akcji... przeciez to sa an akzda
-			// akcje bajery.... o_O
+
 			public void actionPerformed(ActionEvent e) {
 				setSources();
 				setProperties();
@@ -112,7 +111,7 @@ public class PropertiesWindow extends JFrame {
 
 	}
 
-	private void setSources() {// wyedytowac save proprties
+	private void setSources() {
 		liczbaOdczytow = Integer.parseInt(zrodla.getText());
 		
 		panel.removeAll();
@@ -161,8 +160,6 @@ public class PropertiesWindow extends JFrame {
 		OutputStream os;
 		try {
 			os = new FileOutputStream(f);
-			//properties.setProperty("IP", ip.getText());
-			//properties.setProperty("PORT", port.getText());
 			properties.setProperty("HOSTS", zrodla.getText());
 			for (PropertiesWidget pw : oknaUstawien) {
 				
@@ -177,7 +174,6 @@ public class PropertiesWindow extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 
-			// setVisible(false);
 			dispose();
 		}
 

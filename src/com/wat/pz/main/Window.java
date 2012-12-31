@@ -49,10 +49,7 @@ public class Window extends JFrame {
 	public static ConnectToDB database;
 	private Graph graph = new Graph(p);
 	private static Plot plot;
-	public volatile static JLayeredPane layer; // Przemek zjebales...
-												// layeredpanel nie mo¿e byc na
-												// wszytskim! trzeba zrobic po
-												// srodku go!
+	public volatile static JLayeredPane layer;
 	private JPanel panelDolny = new JPanel();
 	private JButton openProperties = new JButton("Wlasciwosci");
 	private JButton startRead = new JButton("Zacznij Odczyt");
@@ -66,19 +63,15 @@ public class Window extends JFrame {
 
 	public Window() {
 		super("Muscle Explorer");
-		// this.setUndecorated(true);
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.getLayeredPane().setSize(this.getSize().height,
 				this.getSize().width);
-		/* layer = this.getLayeredPane(); */
 		layer = new JLayeredPane();
-		// layer.setLayout(new BorderLayout());
 		p.setLayout(new BorderLayout());
 		p.add(layer);
 
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 
-		// createBufferStrategy(2);
 		bs = getBufferStrategy();
 		this.getContentPane().add(p);
 
@@ -95,7 +88,6 @@ public class Window extends JFrame {
 		this.setIconImage(image);
 
 		if (!SystemTray.isSupported()) {
-			System.out.println("SystemTray is not supported");
 			return;
 		}
 
@@ -106,7 +98,6 @@ public class Window extends JFrame {
 		MenuItem messageItem = new MenuItem("Show Window");
 		messageItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// JOptionPane.showMessageDialog(null, "www.java2s.com");
 				setVisible(true);
 			}
 		});
@@ -125,29 +116,34 @@ public class Window extends JFrame {
 		try {
 			tray.add(icon);
 		} catch (AWTException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 
 		this.pack();
 		this.setSize(500, 500);
-		// this.setLocationRelativeTo(null);
 
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
-		/*
-		 * try { //System.out.println(Window.class.getResource("splash.jpg"));
-		 * JSplash jsplash = new JSplash(
-		 * Window.class.getResource("splash.jpg"), true, true, false, null,
-		 * null, Color.red, Color.black); jsplash.splashOn();
-		 * jsplash.setProgress(20, "Loading"); Thread.sleep(500);
-		 * jsplash.setProgress(40, "Loading"); Thread.sleep(500);
-		 * jsplash.setProgress(60, "Loading"); Thread.sleep(500);
-		 * jsplash.setProgress(80, "Loading"); Thread.sleep(500);
-		 * jsplash.setProgress(100, "Loading"); Thread.sleep(500);
-		 * jsplash.splashOff(); } catch (InterruptedException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); }
-		 */
+
+		try {
+			JSplash jsplash = new JSplash(
+					Window.class.getResource("splash.jpg"), true, true, false,
+					null, null, Color.red, Color.black);
+			jsplash.splashOn();
+			jsplash.setProgress(20, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(40, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(60, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(80, "Loading");
+			Thread.sleep(500);
+			jsplash.setProgress(100, "Loading");
+			Thread.sleep(500);
+			jsplash.splashOff();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 
 		database = null;
 		layer.add(graph, new Integer(0));
@@ -210,8 +206,6 @@ public class Window extends JFrame {
 				Connect con = null;
 				for (Plot p : plotList) {
 					con = p.getConnect();
-					// con.interrupt();
-					// con.suspend();
 					con.closeSocket();
 
 				}
@@ -228,7 +222,6 @@ public class Window extends JFrame {
 					JFileChooser fileChooser = new JFileChooser();
 					FileFilter filter = new FileNameExtensionFilter(
 							"TXT Files", "txt");
-					// fileChooser.addChoosableFileFilter(filter);
 					fileChooser.setFileFilter(filter);
 					int wybor = fileChooser.showSaveDialog(null);
 					if (wybor == JFileChooser.APPROVE_OPTION) {
@@ -266,7 +259,6 @@ public class Window extends JFrame {
 
 					if (file.matches(".+[.][tT][xX][tT]")) {
 
-						// Data parse = new Data(file);
 						Results resultWindow = new Results(file);
 
 						resultWindow.setVisible(true);
