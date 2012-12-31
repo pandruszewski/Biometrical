@@ -31,7 +31,6 @@ public class Plot extends JPanel {
 	private int iteratorPodzialkiPionowej = 0;
 	private boolean simulated = false;
 
-
 	public boolean isSimulated() {
 		return simulated;
 	}
@@ -52,7 +51,6 @@ public class Plot extends JPanel {
 		this.p = p;
 		this.setSize(p.getSize());
 		this.graph = graph;
-		// System.out.println(this.isDoubleBuffered());
 		this.setDoubleBuffered(true);
 		this.setIgnoreRepaint(true);
 	}
@@ -66,7 +64,6 @@ public class Plot extends JPanel {
 		Color kolor = ((ColorSwatch) propertiesWidget.getColorButton()
 				.getIcon()).getColor();
 		int dlugosc = connect.getCustomCollection().size() - 1;
-		// tu
 		int j = 0;
 		int v = 0;
 		Measurement current = null;
@@ -80,7 +77,6 @@ public class Plot extends JPanel {
 		i = this.getSize().width;
 
 		if (dlugosc >= 0) {
-			// System.out.println(connect.getCustomCollection().getMin());
 			j = obliczPunkt((int) connect.getCustomCollection().get(dlugosc)
 					.getValue()
 					- (connect.getCustomCollection().getMin().intValue() / 2));
@@ -90,7 +86,6 @@ public class Plot extends JPanel {
 		g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND));
 		g.setColor(kolor);
-		// synchronized (this) {
 
 		while (i > 45) {
 
@@ -107,8 +102,6 @@ public class Plot extends JPanel {
 				v = obliczPunkt((int) current.getValue()
 						- (connect.getCustomCollection().getMin().intValue() / 2));
 
-				// g.drawLine(i,graph.getSize().height -
-				// graph.getOdstepDol(),i,graph.getMinA());
 				g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 						BasicStroke.JOIN_ROUND));
 				g.draw(new Line2D.Double(i - odstep, v, i, j));
@@ -129,22 +122,13 @@ public class Plot extends JPanel {
 
 							if (previousCutted < currentCutted) {
 								rysujPodzialke(g, i, current);
-								g.setColor(kolor); // trzeba
-													// narysowac
-													// w
-													// odpowiednim
-													// miejscu
-
-//								System.out.println("ELSE: " + "F: "
-//										+ current.getTime() + " S: "
-//										+ previous.getTime());
+								g.setColor(kolor);
 
 							}
 						} else {
 							int podzilkaCount = (int) (previous.getTime() - current
 									.getTime() / 1000);
-							// tu moznadopisac funkcje funkcje;, ale mi sie nie
-							// chce.
+
 						}
 					}
 
@@ -159,72 +143,18 @@ public class Plot extends JPanel {
 			i -= odstep;
 
 		}
-		// }
-		// gg.drawImage(drawImage(), 0, 0, this);
+
 	}
 
-	/*
-	 * public BufferedImage drawImage() { BufferedImage bi = new
-	 * BufferedImage(this.getWidth(), this.getHeight(),
-	 * BufferedImage.TYPE_INT_ARGB); Graphics2D g = bi.createGraphics(); Color
-	 * kolor = ((ColorSwatch) propertiesWidget.getColorButton()
-	 * .getIcon()).getColor(); int dlugosc =
-	 * connect.getCustomCollection().size() - 1; int j = 0; int v = 0;
-	 * this.setSize(p.getSize());
-	 * 
-	 * wysokosc = this.getSize().height - odstep;
-	 * 
-	 * g.setColor(kolor); int i = 45; i = this.getSize().width;
-	 * 
-	 * if (dlugosc >= 0) { j = obliczPunkt((int)
-	 * connect.getCustomCollection().get(dlugosc) .getValue()); }
-	 * g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
-	 * BasicStroke.JOIN_ROUND)); g.setColor(kolor); // - synchronized (this) {
-	 * while (i > 45) {
-	 * 
-	 * if (dlugosc >= 0 && connect.getCustomCollection() != null) {
-	 * 
-	 * skala = connect.getCustomCollection().getScaleNumber( (p.getSize().width
-	 * - 40) / odstep); dlugoscY = graph.getScaleHeight();
-	 * 
-	 * graph.scaleGraph(skala / dlugoscY, connect
-	 * .getCustomCollection().getMin().intValue()); skala = (double) dlugoscY /
-	 * skala; v = obliczPunkt((int) (connect.getCustomCollection()
-	 * .get(dlugosc).getValue() - connect
-	 * .getCustomCollection().getMin().intValue())); // g.drawLine (i - odstep,
-	 * v, i, j); g.draw(new Line2D.Double(i - odstep, v, i, j));
-	 * 
-	 * dlugosc -= 1; j = v;
-	 * 
-	 * }
-	 * 
-	 * i -= odstep;
-	 * 
-	 * } // }
-	 * 
-	 * return bi; }
-	 */
 	@Override
 	public void update(Graphics g) {
 		super.update(g);
 	};
 
 	public int obliczPunkt(int punkt) {
-		// / if (punkt > 0) {
-		// System.out.println(punkt + "   >>>  " + (int) ((this.getSize().height
-		// - graph.getOdstepDol()) - (skala * punkt)));
-		return (int) (((p.getSize().height - graph.getOdstepDol()) - (skala * punkt) /*
-																					 * +
-																					 * graph
-																					 * .
-																					 * getOdstepGora
-																					 * (
-																					 * )
-																					 */));
-		// }
 
-		// return (int) ((this.getSize().height - graph.getOdstepDol()) + (skala
-		// * punkt) /*+ graph.getOdstepGora()*/);
+		return (int) (((p.getSize().height - graph.getOdstepDol()) - (skala * punkt)));
+
 	}
 
 	public Connect getConnect() {
@@ -251,18 +181,13 @@ public class Plot extends JPanel {
 		g.drawLine(i, graph.getSize().height - graph.getOdstepDol(), i,
 				graph.getMinA());
 
-		// double d = (Math.round(((double) m.getTime() / 1000) * 100)) / 100;
-	
-
 		Date date = m.getDate();
 
-		SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat(
-				"HH:mm:ss");
+		SimpleDateFormat dateformatYYYYMMDD = new SimpleDateFormat("HH:mm:ss");
 
-		StringBuilder time = new StringBuilder(
-				dateformatYYYYMMDD.format(date));
-		
-	g.drawString(time.toString(), i-25,
+		StringBuilder time = new StringBuilder(dateformatYYYYMMDD.format(date));
+
+		g.drawString(time.toString(), i - 25,
 				graph.getSize().height - graph.getOdstepDol() + 20);
 
 	}
