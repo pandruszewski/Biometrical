@@ -1,14 +1,13 @@
 package com.wat.pz.wizualizacja.collection;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.wat.pz.plot.Plot;
-import com.wat.pz.wizualizacja.connection.Connect;
+
 
 public class CustomCollection extends LinkedList<Measurement> {
 
@@ -27,7 +26,7 @@ public class CustomCollection extends LinkedList<Measurement> {
 
 	public void setMax() {
 
-		/* this.max = Collections.max(this, ) */
+	
 
 	}
 
@@ -47,7 +46,7 @@ public class CustomCollection extends LinkedList<Measurement> {
 	}
 
 	public CustomCollection(int numElements, CustomListener cL) {
-		// super(numElements);
+	
 		customListener = cL;
 	}
 
@@ -63,7 +62,7 @@ public class CustomCollection extends LinkedList<Measurement> {
 
 	public synchronized double getScaleNumber(int rozmiar) {
 
-		/* if (rozmiar > 0 && rozmiar < super.size()) { */
+		
 		if (rozmiar > 0 && super.size() - 1 > 0) {
 		List<Measurement> lista;
 			if (rozmiar >= (super.size() - 1)) {
@@ -72,40 +71,16 @@ public class CustomCollection extends LinkedList<Measurement> {
 				lista =  super.subList((super.size() - 1 - rozmiar),
 						super.size() - 1);
 			}
-			// System.out.println("wjechal  "+ rozmiar);
+		
 			Measurement tmpMax = Collections.max(lista);
 			Measurement tmpMin = Collections.min(lista);
 			min= tmpMin.getValue();
 			
 			max= tmpMax.getValue();
 		
-			//lista = null;
-			//System.gc();
-			// System.out.println("max= " + max + " min = " + min + " size = " +
-			// super.size());
-		}
-		/*if ((-min) > max) {
-			return (-min);
-		}*/
-		
-		/*if( max- min > 2000) {
-			System.out.println("MAX");
-			return  min;
-		}
-		else if(max - min < 1000 ){
-			//min = 0.0;
-			System.out.println("MIN");
 			
-			return max;
-		}*/
-		//min = 0.0;
-//		System.out.println("DUPA");
-		/*if(max - min > 500){
-			return 0.8*max;
 		}
-		else if(max - min <= 500) {
-			return max;
-		}*/
+
 		return max;
 	}
 

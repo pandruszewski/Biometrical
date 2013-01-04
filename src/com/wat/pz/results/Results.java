@@ -29,7 +29,7 @@ public class Results extends JFrame {
 	class WindowEventHandler extends WindowAdapter {
 		public void windowClosing(WindowEvent evt) {
 			Toolkit.getDefaultToolkit().removeAWTEventListener(awt);
-			//System.out.println("Usuwanie");
+
 		}
 	};
 
@@ -48,7 +48,7 @@ public class Results extends JFrame {
 			e.printStackTrace();
 		}
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		// setSize(300,300);
+
 		JPanel panel = new JPanel();
 		sliderY = new JSlider(JSlider.VERTICAL, 10, 30, 10);
 		sliderX = new JSlider(JSlider.HORIZONTAL, 10, 30, 10);
@@ -70,24 +70,21 @@ public class Results extends JFrame {
 				}
 				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S) {
 					plot.copyImage(2);
-					
+
 				}
 				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N) {
 					if (e.getID() == KeyEvent.KEY_PRESSED) {
 						plot.zaznaczenie();
 					}
-					
-					
+
 				}
 				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
 					if (e.getID() == KeyEvent.KEY_PRESSED) {
 						plot.setMilimeterMode(!plot.isMilimeterMode());
 					}
-					
-					
+
 				}
-				
-			
+
 			}
 		};
 		Toolkit.getDefaultToolkit().addAWTEventListener(awt,
@@ -122,7 +119,7 @@ public class Results extends JFrame {
 
 			@Override
 			public void stateChanged(ChangeEvent arg) {
-				System.out.println(sliderY.getValue());
+				
 				plot.setPrzeskalujWykresY(sliderY.getValue());
 			}
 
@@ -135,16 +132,11 @@ public class Results extends JFrame {
 			}
 
 		});
-		// scroll.add(plot);
-		// add(scroll);
-		// add(panel);
 
 		add(scroll, BorderLayout.CENTER);
 		add(sliderX, BorderLayout.NORTH);
 		add(sliderY, BorderLayout.WEST);
 		this.pack();
-
-		// graph = new Graph(panel);
 
 	}
 

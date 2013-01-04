@@ -20,9 +20,7 @@ import com.wat.pz.utils.ColorSwatch;
 import com.wat.pz.utils.Toolkit;
 
 public class PropertiesWidget extends JPanel {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JTextField ip = new JTextField(15);
 	private JTextField port = new JTextField(15);

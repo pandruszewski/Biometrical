@@ -2,7 +2,7 @@ package com.wat.pz.plot;
 
 public class Watek extends Thread{
 
-	private Plot plot;
+	
 	public Watek(){
 
 	}

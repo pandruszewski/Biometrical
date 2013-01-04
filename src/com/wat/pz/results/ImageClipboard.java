@@ -20,7 +20,7 @@ public class ImageClipboard implements Transferable {
 		} else {
 			throw new UnsupportedFlavorException(flavor);
 		}
-		// return null;
+		
 	}
 
 	@Override

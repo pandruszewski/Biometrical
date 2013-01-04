@@ -14,11 +14,6 @@ public class ConnectToDB {
 	private Connection conn;
 	private Statement statement;
 	private ResultSet result;
-	private String nazwaObiektuXML = "Obiekt";
-	private String wspolrzednaXXML = "WspolrzednaX";
-	private String wspolrzednaYXML = "WspolrzednaY";
-	private String indeksXML = "Indeks";
-
 	public ConnectToDB() {
 		if (conn == null) {
 			try {

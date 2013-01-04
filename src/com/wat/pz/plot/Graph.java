@@ -46,7 +46,7 @@ public class Graph extends JPanel {
 
 			g2.drawLine(40, a, this.getSize().width, a);
 
-			// //POCZATEK EDYCJI KEMAL DZIS KOMBINUJE NAD SKALA
+			//  EDYCJA KEMAL 
 
 			int wartosc = (int) (valueOnLeft * skala);
 			wartosc += min;
@@ -56,6 +56,8 @@ public class Graph extends JPanel {
 			odstepGora = a;
 
 			minA = a;
+			
+			//KONIEC EDYCJI KEMAL
 		}
 
 		valueOnLeft = 0;

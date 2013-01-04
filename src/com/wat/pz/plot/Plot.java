@@ -28,7 +28,7 @@ public class Plot extends JPanel {
 	private Graph graph;
 	private double skala = 1.0;
 	private int odstep = 10;
-	private int iteratorPodzialkiPionowej = 0;
+	
 	private boolean simulated = false;
 
 	public boolean isSimulated() {

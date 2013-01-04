@@ -1,6 +1,6 @@
 package com.wat.pz.results;
 
-import java.util.Date;
+
 
 public class Point implements Comparable<Point>{
 	private int x;

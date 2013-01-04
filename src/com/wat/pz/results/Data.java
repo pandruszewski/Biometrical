@@ -19,20 +19,17 @@ import org.w3c.dom.Document;
 
 public class Data {
 
-	private DocumentBuilder builder = null;
-	private XPath xpath = null;
 	private File f = null;
-	private Document doc = null;
+
 	public List<Point> points = new LinkedList<Point>();
-	
-	
 
 	public Data(String path) throws XPathExpressionException {
-		
+
 		f = new File(path);
 		parseDocument();
-		
+
 	}
+
 	private void parseDocument() throws XPathExpressionException {
 		BufferedReader br = null;
 		try {
@@ -42,22 +39,21 @@ public class Data {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		try {
 			String s = null;
-			while((s = br.readLine() )!= null){
-				//System.out.println(">>" + s);
-				points.add(new Point(Integer.parseInt(s), Integer.parseInt(br.readLine()), Integer.parseInt(br.readLine()),Long.parseLong(br.readLine()),br.readLine()));
-				
+			while ((s = br.readLine()) != null) {
+
+				points.add(new Point(Integer.parseInt(s), Integer.parseInt(br
+						.readLine()), Integer.parseInt(br.readLine()), Long
+						.parseLong(br.readLine()), br.readLine()));
+
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-			
 
-		
 	}
 
 	public int getMaxX() {
@@ -65,7 +61,7 @@ public class Data {
 
 			@Override
 			public int compare(Point o1, Point o2) {
-				
+
 				return Math.max(o1.getX(), o2.getX());
 			}
 
@@ -80,11 +76,10 @@ public class Data {
 		Point max = Collections.max(points);
 		Point min = Collections.min(points);
 		if (min.getY() < 0) {
-			
+
 		}
 		return max.getY();
 
 	}
 
-	
 }

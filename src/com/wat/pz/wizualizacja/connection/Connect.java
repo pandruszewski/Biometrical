@@ -34,14 +34,14 @@ public class Connect extends Thread {
 	private int indexPlot;
 	private int odstepPunktow = 0;
 	private long wspolrzednaX = 0;
-	private ConnectToDB database;
+	
 	private BufferedWriter bw = null;
 	long connectTime = System.currentTimeMillis();
 
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
 		this.plot = p;
 		odstepPunktow = p.getOdstep();
-		this.database = database;
+		
 		customCollection = new CustomCollection(new CustomListener(p, p));
 		this.indexPlot = indexPlot;
 		Properties prop = new Properties();
@@ -133,9 +133,7 @@ public class Connect extends Thread {
 					e.printStackTrace();
 				}
 				
-				// database.addData(String.valueOf(wspolrzednaX),
-				// String.valueOf(content),
-				// String.valueOf(indexPlot));
+				
 			}
 			try {
 				System.out.println("zakmnieto");
