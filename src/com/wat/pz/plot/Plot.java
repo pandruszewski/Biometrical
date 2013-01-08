@@ -28,6 +28,10 @@ public class Plot extends JPanel {
 	private Graph graph;
 	private double skala = 1.0;
 	private int odstep = 10;
+	private int parametrSzumow = 300;
+	private int roznicaPunktow = 0;
+	private int wartoscPierwsza;
+	private int wartoscDruga;
 	
 	private boolean simulated = false;
 
@@ -77,9 +81,10 @@ public class Plot extends JPanel {
 		i = this.getSize().width;
 
 		if (dlugosc >= 0) {
-			j = obliczPunkt((int) connect.getCustomCollection().get(dlugosc)
+			wartoscPierwsza = (int) connect.getCustomCollection().get(dlugosc)
 					.getValue()
-					- (connect.getCustomCollection().getMin().intValue() / 2));
+					- (connect.getCustomCollection().getMin().intValue() /*/ 2*/);
+			j = obliczPunkt(wartoscPierwsza);
 			previous = connect.getCustomCollection().get(dlugosc);
 		}
 
@@ -95,16 +100,33 @@ public class Plot extends JPanel {
 						(p.getSize().width - 40) / odstep);
 				dlugoscY = graph.getScaleHeight();
 
-				graph.scaleGraph(skala / dlugoscY, connect
-						.getCustomCollection().getMin().intValue() / 2);
+				graph.scaleGraph(skala / dlugoscY, (connect
+						.getCustomCollection().getMin().intValue()) /*/ 2*/ );
 				skala = (double) dlugoscY / skala;
 				current = connect.getCustomCollection().get(dlugosc);
-				v = obliczPunkt((int) current.getValue()
-						- (connect.getCustomCollection().getMin().intValue() / 2));
+				wartoscDruga = (int) current.getValue()
+						- ((connect.getCustomCollection().getMin().intValue()) /*/ 2*/);
+				
+				if(wartoscPierwsza - wartoscDruga < parametrSzumow && wartoscPierwsza - wartoscDruga > 0){
+					roznicaPunktow = 3*(wartoscPierwsza - wartoscDruga)/4;
+
+					wartoscDruga += roznicaPunktow;
+
+				}
+				else if(wartoscDruga - wartoscPierwsza < parametrSzumow && wartoscDruga - wartoscPierwsza > 0){
+					roznicaPunktow = 3*(wartoscDruga - wartoscPierwsza)/4;
+
+					wartoscDruga -= roznicaPunktow;
+				}
+				j = obliczPunkt(wartoscPierwsza);
+				v = obliczPunkt(wartoscDruga);
 
 				g.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 						BasicStroke.JOIN_ROUND));
+
+				
 				g.draw(new Line2D.Double(i - odstep, v, i, j));
+wartoscPierwsza = wartoscDruga;
 				long time = connect.getCustomCollection().get(dlugosc)
 						.getTime();
 

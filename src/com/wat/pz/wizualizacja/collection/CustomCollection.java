@@ -80,8 +80,12 @@ public class CustomCollection extends LinkedList<Measurement> {
 		
 			
 		}
-
-		return max;
+//		if(max - min < 100) {
+//			return max - min;
+//		}
+		
+//		return max - min;
+		return max  - min;
 	}
 
 	@Override

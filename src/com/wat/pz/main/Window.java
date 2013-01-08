@@ -125,25 +125,25 @@ public class Window extends JFrame {
 		graph.setSize(p.getSize());
 		graph.setBackground(Color.black);
 
-		try {
-			JSplash jsplash = new JSplash(
-					Window.class.getResource("splash.jpg"), true, true, false,
-					null, null, Color.red, Color.black);
-			jsplash.splashOn();
-			jsplash.setProgress(20, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(40, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(60, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(80, "Loading");
-			Thread.sleep(500);
-			jsplash.setProgress(100, "Loading");
-			Thread.sleep(500);
-			jsplash.splashOff();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			JSplash jsplash = new JSplash(
+//					Window.class.getResource("splash.jpg"), true, true, false,
+//					null, null, Color.red, Color.black);
+//			jsplash.splashOn();
+//			jsplash.setProgress(20, "Loading");
+//			Thread.sleep(500);
+//			jsplash.setProgress(40, "Loading");
+//			Thread.sleep(500);
+//			jsplash.setProgress(60, "Loading");
+//			Thread.sleep(500);
+//			jsplash.setProgress(80, "Loading");
+//			Thread.sleep(500);
+//			jsplash.setProgress(100, "Loading");
+//			Thread.sleep(500);
+//			jsplash.splashOff();
+//		} catch (InterruptedException e1) {
+//			e1.printStackTrace();
+//		}
 
 		database = null;
 		layer.add(graph, new Integer(0));
