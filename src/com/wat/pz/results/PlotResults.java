@@ -1,6 +1,7 @@
 package com.wat.pz.results;
 
 import java.awt.AWTException;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -328,9 +329,24 @@ public class PlotResults extends JPanel {
 			minA = a; 
 
 		}
-		
+		int tmpbolek =0;
 		for (int a = panel.getSize().height - 30 - odstepDol; a >= minA; a -= odstepMilimeterX) {
+			
+			if(tmpbolek==10) {
+				tmpbolek=0;
+				
+				
+				g.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
+						BasicStroke.JOIN_ROUND));
+			}
+			
 			g.drawLine(40, a, this.getSize().width, a);
+			
+			g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
+					BasicStroke.JOIN_ROUND));
+			tmpbolek++;
+			
+			
 		}
 
 		maxA = panel.getSize().height - 30 - odstepDol;
@@ -361,9 +377,22 @@ public class PlotResults extends JPanel {
 			}
 
 		}
-
+		int tmpbolek2 =0;
 		for (int b = 40; b <= szerokosc; b += odstepMilimeterY) {
+			
+			if(tmpbolek2==10) {
+				tmpbolek2=0;
+				
+				
+				g.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
+						BasicStroke.JOIN_ROUND));
+			}
+			
 			g.drawLine(b, minA, b, maxA);
+			
+			g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
+					BasicStroke.JOIN_ROUND));
+			tmpbolek2++;
 		}
 
 		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
