@@ -84,7 +84,20 @@ public class CustomCollection extends LinkedList<Measurement> {
 //			return max - min;
 //		}
 		
-//		return max - min;
+//		return max - min;0
+//		min = 35000.0;
+//		max =48000.0;
+//		min = 28000.0;
+//		max =30000.0;
+//		if(max - min < 1000){
+			max += 500;
+			min -= 500;
+//		}else{
+////			max += 500;
+//			min -= 500;
+//		}
+//		
+		
 		return max  - min;
 	}
 

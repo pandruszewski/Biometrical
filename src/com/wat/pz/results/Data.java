@@ -81,5 +81,9 @@ public class Data {
 		return max.getY();
 
 	}
-
+	
+	public int getMinY(){
+		Point min = Collections.min(points);
+		return min.getY();
+	}
 }
