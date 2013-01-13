@@ -1,7 +1,7 @@
 package com.wat.pz.wizualizacja.collection;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -13,6 +13,8 @@ public class CustomCollection extends LinkedList<Measurement> {
 
 	private Double min=0.0 ;
 	private Double max=0.0 ;
+	private Toolkit tk = Toolkit.getDefaultToolkit();
+	private int odstep = 4;
 	
 	CustomListener customListener;
 
@@ -111,7 +113,10 @@ public class CustomCollection extends LinkedList<Measurement> {
 	public synchronized void addLast(Measurement e) {
 
 		super.addLast(e);
-
+		System.out.println("Screen width = " + tk.getScreenSize().width);
+		if(this.size() > tk.getScreenSize().width/odstep) {
+			this.removeFirst();
+		}
 		customListener.refresh();// actionPerformed(new ActionEvent(this, 1,
 									// "add"));
 	}
