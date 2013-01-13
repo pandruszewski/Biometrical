@@ -33,6 +33,7 @@ public class Plot extends JPanel {
 	private Graph graph;
 	private double skala = 1.0;
 	private int odstep = 4;
+	private int odstepDoWykresuAnalizy = 10;
 	private int parametrSzumow = 300;
 	private int roznicaPunktow = 0;
 	private int wartoscPierwsza;
@@ -50,6 +51,10 @@ public class Plot extends JPanel {
 
 	private PropertiesWidget propertiesWidget;
 	private BufferStrategy bs;
+
+	public int getOdstepDoWykresuAnalizy() {
+		return odstepDoWykresuAnalizy;
+	}
 
 	public int getOdstep() {
 		return odstep;

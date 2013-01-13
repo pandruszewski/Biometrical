@@ -40,7 +40,7 @@ public class Connect extends Thread {
 
 	public Connect(Plot p, int indexPlot, ConnectToDB database) {
 		this.plot = p;
-		odstepPunktow = p.getOdstep();
+		odstepPunktow = p.getOdstepDoWykresuAnalizy();
 		
 		customCollection = new CustomCollection(new CustomListener(p, p));
 		this.indexPlot = indexPlot;
