@@ -1,7 +1,6 @@
 package com.wat.pz.main;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -17,6 +16,7 @@ import java.util.Properties;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -29,6 +29,7 @@ public class PropertiesWindow extends JFrame {
 	private int liczbaOdczytow;
 	private File f = new File("conf.properties");
 	private Properties properties = new Properties();
+	private JTextField szum = new JTextField(15);
 	private JTextField ip = new JTextField(15);
 	private JTextField zrodla = new JTextField(15);
 	private JTextField port = new JTextField(15);
@@ -77,6 +78,8 @@ public class PropertiesWindow extends JFrame {
 		iloscKomponentow.add(ustawZrodla);
 		iloscKomponentow.add(zrodla);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		
+		
 		for (int i = 0; i < liczbaOdczytow; i++) {
 
 			PropertiesWidget pw = new PropertiesWidget(i, WINDOW_WIDTH,

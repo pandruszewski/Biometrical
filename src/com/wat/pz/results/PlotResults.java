@@ -75,14 +75,13 @@ public class PlotResults extends JPanel {
 
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 
-
 		this.addHierarchyBoundsListener(new HierarchyBoundsListener() {
 
 			@Override
 			public void ancestorResized(HierarchyEvent arg0) {
 				obliczKulke(lastMouseMoved);
 				startY = (int) (minA);
-				endY = (int) (maxA );
+				endY = (int) (maxA);
 				square.setStartY((int) (startY * przeskalujWykresY));
 				square.setEndY((int) (endY * przeskalujWykresY));
 			}
@@ -148,7 +147,7 @@ public class PlotResults extends JPanel {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-//				wasDragged = true;
+				// wasDragged = true;
 				endX = (int) (e.getX() / przeskalujWykresX);
 				endY = (int) (maxA /* / przeskalujWykresY */);
 				if (!((endX * przeskalujWykresX) <= przeskalujWykresX
@@ -291,13 +290,11 @@ public class PlotResults extends JPanel {
 	private void paintMilimeter(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
 
-	
-
 		square.paintSquare(g);
 		g.scale(przeskalujWykresX, przeskalujWykresY);
 
-		double pomoc = 0;
-		skala = data.getMaxY();
+		double zakres = data.getMaxY() - data.getMinY();
+
 		int wysokoscOkna = panel.getSize().height - 30;
 		int szerokoscOkna = this.getSize().width;
 		setPreferredSize(new Dimension(
@@ -305,54 +302,52 @@ public class PlotResults extends JPanel {
 				(int) (przeskalujWykresY * (panel.getSize().height - 30))));
 
 		wysokosc = wysokoscOkna - 20;
-		szerokosc = szerokoscOkna; 
+		szerokosc = szerokoscOkna;
 
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
 		int mojOdstepGora = (wysokoscOkna) / odstep;
 		odstepGora = ((wysokoscOkna) - (mojOdstepGora * odstep));
 		if (odstepGora <= 9)
 			odstepGora += odstep;
-		pomoc = skala;
-		skala = skala / (((wysokoscOkna)) - odstepDol - odstepGora);
+
+		skala = zakres / (((wysokoscOkna)) - odstepDol - odstepGora);
 
 		int valueOnLeft = 0;
+		valueOnLeft = data.getMinY();
 
 		g.setColor(Color.gray);
-		minA = dlugoscY + 10 - odstep; 
+		minA = dlugoscY + 10 - odstep;
 		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
 
-			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
-					+ (odstep / 3));
-			valueOnLeft += odstep;
+			g.drawString(String.valueOf((int) valueOnLeft/** skala) */
+			), 0, a + (odstep / 3));
+			valueOnLeft += Math.ceil(odstep * skala);
 			odstepGora = a;
 
-			minA = a; 
+			minA = a;
 
 		}
-		int tmpbolek =0;
+		int tmpbolek = 0;
 		for (int a = panel.getSize().height - 30 - odstepDol; a >= minA; a -= odstepMilimeterX) {
-			
-			if(tmpbolek==10) {
-				tmpbolek=0;
-				
-				
+
+			if (tmpbolek == 10) {
+				tmpbolek = 0;
+
 				g.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
 						BasicStroke.JOIN_ROUND));
 			}
-			
+
 			g.drawLine(40, a, this.getSize().width, a);
-			
+
 			g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
 					BasicStroke.JOIN_ROUND));
 			tmpbolek++;
-			
-			
+
 		}
 
 		maxA = panel.getSize().height - 30 - odstepDol;
-		valueOnLeft = 0;
-
-		
+		valueOnLeft = data.getMinY();
+		// data.getMaxY();
 
 		int roznicaWysY = 0;
 
@@ -377,26 +372,22 @@ public class PlotResults extends JPanel {
 			}
 
 		}
-		int tmpbolek2 =0;
+		int tmpbolek2 = 0;
 		for (int b = 40; b <= szerokosc; b += odstepMilimeterY) {
-			
-			if(tmpbolek2==10) {
-				tmpbolek2=0;
-				
-				
+
+			if (tmpbolek2 == 10) {
+				tmpbolek2 = 0;
+
 				g.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
 						BasicStroke.JOIN_ROUND));
 			}
-			
+
 			g.drawLine(b, minA, b, maxA);
-			
+
 			g.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
 					BasicStroke.JOIN_ROUND));
 			tmpbolek2++;
 		}
-
-		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
-
 		g.setColor(Color.yellow);
 		Point o1 = data.points.get(0);
 		Point o2;
@@ -413,7 +404,6 @@ public class PlotResults extends JPanel {
 		}
 
 		if (kuleczka != null) {
-			
 
 			g.scale(1.0 / przeskalujWykresX, 1.0 / przeskalujWykresY);
 			kuleczka.paintKuleczka(g);
@@ -431,13 +421,13 @@ public class PlotResults extends JPanel {
 		double pomoc = 0;
 		skala = data.getMaxY();
 		int wysokoscOkna = panel.getSize().height - 30;
-		int szerokoscOkna = this.getSize().width; 
+		int szerokoscOkna = this.getSize().width;
 		setPreferredSize(new Dimension(
 				(int) (przeskalujWykresX * (data.getMaxX() + 30)),
 				(int) (przeskalujWykresY * (panel.getSize().height - 30))));
 
 		wysokosc = wysokoscOkna - 20;
-		szerokosc = szerokoscOkna; 
+		szerokosc = szerokoscOkna;
 
 		dlugoscY = (int) Math.ceil((wysokosc - 10) / 2);
 		int mojOdstepGora = (wysokoscOkna) / odstep;
@@ -450,8 +440,8 @@ public class PlotResults extends JPanel {
 		int valueOnLeft = 0;
 
 		g.setColor(Color.gray);
-		minA = dlugoscY + 10 - odstep; 
-										
+		minA = dlugoscY + 10 - odstep;
+
 		for (int a = panel.getSize().height - 30 - odstepDol; a > 9; a -= odstep) {
 
 			g.drawLine(40, a, this.getSize().width, a);
@@ -468,7 +458,6 @@ public class PlotResults extends JPanel {
 		maxA = panel.getSize().height - 30 - odstepDol;
 		valueOnLeft = 0;
 
-		
 		int roznicaWysY = 0;
 
 		// EDITED By BOLEC -- wyswietlanie podzialki pionowej
@@ -512,7 +501,7 @@ public class PlotResults extends JPanel {
 		}
 
 		if (kuleczka != null) {
-		
+
 			g.scale(1.0 / przeskalujWykresX, 1.0 / przeskalujWykresY);
 			kuleczka.paintKuleczka(g);
 		}
@@ -522,15 +511,13 @@ public class PlotResults extends JPanel {
 	private void paintTime(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg;
 
-		
 		square.paintSquare(g);
 
 		g.scale(przeskalujWykresX, przeskalujWykresY);
 
-		double pomoc = 0;
-		skala = data.getMaxY();
+		double zakres = data.getMaxY() - data.getMinY();
 		int wysokoscOkna = panel.getSize().height - 30;
-		int szerokoscOkna = this.getSize().width; 
+		int szerokoscOkna = this.getSize().width;
 		setPreferredSize(new Dimension(
 				(int) (przeskalujWykresX * (data.getMaxX() + 30)),
 				(int) (przeskalujWykresY * (panel.getSize().height - 30))));
@@ -543,17 +530,17 @@ public class PlotResults extends JPanel {
 		odstepGora = ((wysokoscOkna) - (mojOdstepGora * odstep));
 		if (odstepGora <= 9)
 			odstepGora += odstep;
-		pomoc = skala;
-		skala = skala / (((wysokoscOkna)) - odstepDol - odstepGora);
 
-		int valueOnLeft = 0;
+		skala = zakres / (((wysokoscOkna)) - odstepDol - odstepGora);
+
+		int valueOnLeft = data.getMinY();
 
 		g.setColor(Color.gray);
-		minA = dlugoscY + 10 - odstep; 
+		minA = dlugoscY + 10 - odstep;
 
 		for (int a = dlugoscY + 10 - odstep; a > 9; a -= odstep) {
 
-			minA = a; 
+			minA = a;
 
 		}
 
@@ -561,9 +548,9 @@ public class PlotResults extends JPanel {
 
 			g.drawLine(40, a, this.getSize().width, a);
 
-			g.drawString(String.valueOf((int) (valueOnLeft * skala)), 0, a
+			g.drawString(String.valueOf((int) (valueOnLeft)), 0, a
 					+ (odstep / 3));
-			valueOnLeft += odstep;
+			valueOnLeft += Math.ceil(odstep * skala);
 			odstepGora = a;
 
 			minA = a;
@@ -571,16 +558,11 @@ public class PlotResults extends JPanel {
 		}
 
 		maxA = panel.getSize().height - 30 - odstepDol;
-		valueOnLeft = 0;
-
-	
+		valueOnLeft = data.getMinY();
 
 		// EDITED By BOLEC -- wyswietlanie podzialki pionowej
 
 		FontRenderContext frc = g.getFontRenderContext();
-	
-
-		skala = (wysokoscOkna - odstepDol - odstepGora) / pomoc;
 
 		g.setColor(Color.yellow);
 		Point o1 = data.points.get(0);
@@ -602,13 +584,14 @@ public class PlotResults extends JPanel {
 			}
 
 			g.drawLine(o1.getX() + odstepOdPoczatkuWykresu,
-					obliczPunkt(o1.getY()),
-					o2.getX() + odstepOdPoczatkuWykresu, obliczPunkt(o2.getY()));
+					(int) (obliczPunkt(o1.getY())), o2.getX()
+							+ odstepOdPoczatkuWykresu,
+					(int) (obliczPunkt(o2.getY())));
 			o1 = o2;
 		}
 
 		if (kuleczka != null) {
-			
+
 			g.scale(1.0 / przeskalujWykresX, 1.0 / przeskalujWykresY);
 			kuleczka.paintKuleczka(g);
 		}
@@ -616,15 +599,18 @@ public class PlotResults extends JPanel {
 	}
 
 	public int obliczPunkt(int punkt) {
-		if (punkt > 0) {
-			return (int) ((int) (panel.getSize().height - 30 - odstepDol) - (skala * punkt));
-		}
+		// if (punkt > 0) {
 
-		return (int) ((int) (panel.getSize().height - 30 - odstepDol) + (skala * punkt));
+		punkt = punkt - data.getMinY();
+		return (int) ((int) (panel.getSize().height - 30 - odstepDol) - (punkt / (skala)));
+		// }
+
+		// return (int) ((int) (panel.getSize().height - 30 - odstepDol) +
+		// (punkt /(skala)));
 	}
 
 	public int obliczPunktOdwotny(int punkt) {
-		return (int) ((panel.getSize().height - 30 - odstepDol - punkt) / skala);
+		return (int) ((panel.getSize().height - 30 - odstepDol - punkt) * skala);
 	}
 
 	public void paintInfoDialog(Graphics g) {
@@ -663,7 +649,7 @@ public class PlotResults extends JPanel {
 					.getX())));
 		}
 		double b = p1.getY() - ((p1.getX() * a));
-		
+
 		ile = (int) Math.round(((a * x) + b));
 		return ile;
 
@@ -734,7 +720,6 @@ public class PlotResults extends JPanel {
 		int wspX = (int) (((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu)) / (odstepPunkt));
 
 		if (wspX >= 0 && wspX < data.points.size()) {
-			
 
 			Point p2;
 			Point p1 = data.points.get(wspX);
@@ -752,7 +737,6 @@ public class PlotResults extends JPanel {
 				p2 = pTmp;
 			}
 
-			
 			int tmpX = (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu));
 			int ilepowinnobyc2 = ilePowinno(tmpX, p1, p2);
 			if (kuleczka == null) {
@@ -760,16 +744,17 @@ public class PlotResults extends JPanel {
 						obliczPunkt(ilePowinno(tmpX, p1, p2)));
 			} else if (((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu) >= data.points
 					.get(0).getX())) {
-			
+
 				pozycjaYKulki = (int) (obliczPunkt(ilePowinno(tmpX, p1, p2)) * przeskalujWykresY);
 				kuleczka.setX((int) (x));
 				kuleczka.setY(pozycjaYKulki);
 
+				System.out.println(kuleczka.getX() + "|" + kuleczka.getY());
 				setToolTipText("<html>Wspolrzedna X: "
 						+ (int) ((x / przeskalujWykresX) - (odstepOdPoczatkuWykresu))
 						+ "<br>Wspolrzedna Y: " + ilepowinnobyc2
 						+ "<br>Pomiar urzadzenie nr: " + p1.getIndeks()
-						+ "<br>Czas " + p1.getTime() + "<br>Data: "
+						+ "<br>Czas " + p1.getTime() + " ms" + "<br>Data: "
 						+ p1.getDate()
 
 						+ "</html>");
@@ -778,7 +763,6 @@ public class PlotResults extends JPanel {
 
 			}
 
-			
 		}
 	}
 
@@ -789,6 +773,7 @@ public class PlotResults extends JPanel {
 					(int) ((lastMouseMoved) * przeskalujWykresX),
 					pozycjaYKulki + 5);
 		}
+
 		return super.getToolTipLocation(event);
 	}
 

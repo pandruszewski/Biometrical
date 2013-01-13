@@ -9,8 +9,13 @@ import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -56,7 +61,8 @@ public class Plot extends JPanel {
 		this.setSize(p.getSize());
 		this.graph = graph;
 		this.setDoubleBuffered(true);
-		// this.setIgnoreRepaint(true);
+		 this.setIgnoreRepaint(true);
+		
 	}
 
 	@Override
